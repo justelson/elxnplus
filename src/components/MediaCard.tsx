@@ -14,26 +14,13 @@ const MediaCard = ({ item }: MediaCardProps) => {
   const getIcon = () => {
     switch (item.type) {
       case 'audio':
-        return <Music className="h-8 w-8" />;
+        return <Music className="h-6 w-6" />;
       case 'video':
-        return <Video className="h-8 w-8" />;
+        return <Video className="h-6 w-6" />;
       case 'document':
-        return <FileText className="h-8 w-8" />;
+        return <FileText className="h-6 w-6" />;
       case 'note':
-        return <StickyNote className="h-8 w-8" />;
-    }
-  };
-
-  const getGradient = () => {
-    switch (item.type) {
-      case 'audio':
-        return 'from-primary/20 to-primary/5';
-      case 'video':
-        return 'from-accent/20 to-accent/5';
-      case 'document':
-        return 'from-blue-500/20 to-blue-500/5';
-      case 'note':
-        return 'from-yellow-500/20 to-yellow-500/5';
+        return <StickyNote className="h-6 w-6" />;
     }
   };
 
@@ -50,13 +37,13 @@ const MediaCard = ({ item }: MediaCardProps) => {
   };
 
   const formatFileSize = (bytes: number | null) => {
-    if (!bytes) return '';
+    if (!bytes) return '0 KB';
     const mb = bytes / (1024 * 1024);
-    return mb > 1 ? `${mb.toFixed(1)} MB` : `${(bytes / 1024).toFixed(0)} KB`;
+    return mb > 1 ? `${mb.toFixed(1)}MB` : `${(bytes / 1024).toFixed(0)}KB`;
   };
 
   const formatDuration = (seconds: number | null) => {
-    if (!seconds) return '';
+    if (!seconds) return '--:--';
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -64,74 +51,66 @@ const MediaCard = ({ item }: MediaCardProps) => {
 
   return (
     <>
-      <div className="glass-card group overflow-hidden hover-glow animate-slide-up">
-        <div className={`h-32 bg-gradient-to-br ${getGradient()} flex items-center justify-center relative overflow-hidden`}>
-          {item.thumbnail_url ? (
-            <img 
-              src={item.thumbnail_url} 
-              alt={item.title}
-              className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity"
-            />
-          ) : null}
-          <div className="relative z-10 text-primary group-hover:scale-110 transition-transform">
-            {getIcon()}
+      <div className="group relative border border-border bg-card hover:bg-accent/5 transition-colors duration-200">
+        {/* Corner Accents */}
+        <div className="absolute top-0 left-0 w-2 h-2 border-l-2 border-t-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute top-0 right-0 w-2 h-2 border-r-2 border-t-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute bottom-0 left-0 w-2 h-2 border-l-2 border-b-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute bottom-0 right-0 w-2 h-2 border-r-2 border-b-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+
+        <div className="p-4 flex flex-col h-full rounded-none">
+          <div className="flex items-start justify-between mb-4">
+            <div className="p-2 border border-border bg-background">
+              {getIcon()}
+            </div>
+            <div className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground border border-border px-1">
+              {item.type}
+            </div>
           </div>
-          {(item.type === 'audio' || item.type === 'video') && (
-            <button 
-              onClick={handleView}
-              className="absolute inset-0 flex items-center justify-center bg-background/50 opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <Play className="h-12 w-12 text-primary" />
-            </button>
-          )}
-        </div>
-        
-        <div className="p-4">
-          <h3 className="font-display font-semibold text-foreground truncate mb-1">
-            {item.title}
-          </h3>
-          {item.description && (
-            <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-              {item.description}
-            </p>
-          )}
-          
-          <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
-            <span className="flex items-center gap-1">
-              <Eye className="h-3 w-3" />
-              {item.view_count}
-            </span>
-            <span className="flex items-center gap-1">
-              <Download className="h-3 w-3" />
-              {item.download_count}
-            </span>
-            {item.file_size && (
-              <span>{formatFileSize(item.file_size)}</span>
-            )}
-            {item.duration && (
-              <span>{formatDuration(item.duration)}</span>
+
+          <div className="flex-1 min-w-0 mb-4">
+            <h3 className="font-display font-bold text-lg leading-tight truncate uppercase tracking-tight mb-1">
+              {item.title}
+            </h3>
+            {item.description && (
+              <p className="text-xs font-mono text-muted-foreground line-clamp-2">
+                {item.description}
+              </p>
             )}
           </div>
-          
-          <div className="flex gap-2">
-            <Button 
-              variant="glass" 
-              size="sm" 
-              className="flex-1"
+
+          <div className="grid grid-cols-2 gap-px bg-border border border-border text-[10px] font-mono text-muted-foreground mb-4">
+            <div className="bg-card p-1 flex items-center justify-between">
+              <span>VIEWS</span>
+              <span className="text-foreground">{item.view_count}</span>
+            </div>
+            <div className="bg-card p-1 flex items-center justify-between">
+              <span>DL</span>
+              <span className="text-foreground">{item.download_count}</span>
+            </div>
+            <div className="bg-card p-1 col-span-2 flex items-center justify-between">
+              <span>SIZE</span>
+              <span className="text-foreground">{formatFileSize(item.file_size)}</span>
+            </div>
+          </div>
+
+          <div className="flex gap-2 mt-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1 rounded-none border-primary hover:bg-primary hover:text-primary-foreground font-mono text-xs uppercase tracking-widest"
               onClick={handleView}
             >
-              <Eye className="h-4 w-4" />
-              View
+              Access
             </Button>
             {item.file_url && (
-              <Button 
-                variant="glow" 
-                size="sm" 
-                className="flex-1"
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-none border-border hover:border-primary"
                 onClick={handleDownload}
               >
                 <Download className="h-4 w-4" />
-                Download
               </Button>
             )}
           </div>
