@@ -29,15 +29,33 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
       case 'audio':
         return (
           <div className="w-full max-w-xl">
-            <div className="bg-card border-x border-b border-border p-8 flex flex-col items-center gap-6">
-              <div className="w-32 h-32 flex items-center justify-center border border-primary/20 bg-accent/5 rounded-full relative overflow-hidden">
-                <div className="absolute inset-0 border border-primary/40 rounded-full animate-[spin_4s_linear_infinite]" style={{ borderTopColor: 'transparent', borderBottomColor: 'transparent' }} />
-                <Music className="h-12 w-12 text-primary" />
+            <div className="bg-card border border-border p-1">
+              <div className="bg-black/5 p-8 flex flex-col items-center gap-8 relative overflow-hidden border-b border-border">
+                {/* Audio Visualizer Placeholder */}
+                <div className="flex items-end justify-center gap-1 h-32 w-full opacity-50">
+                  {[...Array(20)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="w-2 bg-primary animate-[pulse_1s_ease-in-out_infinite]"
+                      style={{
+                        height: `${Math.random() * 100}%`,
+                        animationDelay: `${i * 0.05}s`
+                      }}
+                    />
+                  ))}
+                </div>
+
+                <div className="w-24 h-24 flex items-center justify-center border-2 border-primary rounded-full relative z-10 bg-background/50 backdrop-blur-sm">
+                  <Music className="h-10 w-10 text-primary" />
+                </div>
               </div>
-              <audio controls className="w-full" autoPlay>
-                <source src={item.file_url || ''} />
-                SYSTEM_AUDIO_DRIVER_ERROR
-              </audio>
+
+              <div className="p-4 bg-muted/10 font-mono text-xs">
+                <audio controls className="w-full h-8" autoPlay>
+                  <source src={item.file_url || ''} />
+                  SYSTEM_AUDIO_DRIVER_ERROR
+                </audio>
+              </div>
             </div>
           </div>
         );
@@ -45,11 +63,19 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
       case 'video':
         return (
           <div className="w-full max-w-4xl">
-            <div className="bg-card border-x border-b border-border p-1">
-              <video controls className="w-full bg-black aspect-video" autoPlay>
-                <source src={item.file_url || ''} />
-                SYSTEM_VIDEO_DRIVER_ERROR
-              </video>
+            <div className="bg-card border border-border p-1">
+              <div className="relative border border-muted/20 bg-black">
+                {/* Video Frame Decorations */}
+                <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-white/20 pointer-events-none z-10" />
+                <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-white/20 pointer-events-none z-10" />
+                <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-white/20 pointer-events-none z-10" />
+                <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-white/20 pointer-events-none z-10" />
+
+                <video controls className="w-full bg-black aspect-video relative z-0" autoPlay>
+                  <source src={item.file_url || ''} />
+                  SYSTEM_VIDEO_DRIVER_ERROR
+                </video>
+              </div>
             </div>
           </div>
         );

@@ -36,7 +36,8 @@ const Index = () => {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-primary">
               <Cpu className="h-5 w-5" />
-              <span className="font-display font-bold text-xl tracking-widest">ELXN.PLUS</span>
+              <span className="font-display font-bold text-xl tracking-widest hidden sm:inline">ELXN.PLUS</span>
+              <span className="font-display font-bold text-xl tracking-widest sm:hidden">ELXN+</span>
             </div>
             <div className="hidden md:flex h-6 w-px bg-border mx-2" />
             <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
