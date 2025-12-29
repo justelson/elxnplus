@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Music, Video, FileText, StickyNote, Eye, Download, Trash2, Edit } from 'lucide-react';
+import { Music, Video, FileText, StickyNote, Eye, Download, Trash2 } from 'lucide-react';
 import AdminSidebar from '@/components/AdminSidebar';
+import AdminMobileHeader from '@/components/AdminMobileHeader';
 import { Button } from '@/components/ui/button';
 import { useMedia, MediaType, deleteMedia, MediaItem } from '@/hooks/useMedia';
 import { isAdminLoggedIn } from '@/lib/auth';
@@ -55,8 +56,9 @@ const MediaList = ({ type, title }: MediaListProps) => {
     <div className="flex min-h-screen bg-background">
       <AdminSidebar />
       
-      <main className="flex-1 p-8">
-        <div className="flex items-center justify-between mb-8">
+      <main className="flex-1 p-4 md:p-8">
+        <AdminMobileHeader title={title} />
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6 mt-4 md:mt-0 md:mb-8">
           <div>
             <h1 className="text-3xl font-display font-bold mb-2 flex items-center gap-3">
               {getIcon()}
@@ -64,7 +66,7 @@ const MediaList = ({ type, title }: MediaListProps) => {
             </h1>
             <p className="text-muted-foreground">Manage your {type} files</p>
           </div>
-          <Button variant="glow" onClick={() => navigate('/admin/upload')}>
+          <Button variant="outline" onClick={() => navigate('/admin/upload')}>
             Upload New
           </Button>
         </div>
@@ -74,21 +76,76 @@ const MediaList = ({ type, title }: MediaListProps) => {
             <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : media.length === 0 ? (
-          <div className="glass-card p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
+          <div className="border border-border bg-card p-8 md:p-12 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 border border-border bg-background flex items-center justify-center">
               {getIcon()}
             </div>
             <h3 className="text-xl font-display font-semibold mb-2">No {title} Yet</h3>
             <p className="text-muted-foreground mb-4">Start by uploading your first {type}.</p>
-            <Button variant="glow" onClick={() => navigate('/admin/upload')}>
+            <Button variant="outline" onClick={() => navigate('/admin/upload')}>
               Upload Now
             </Button>
           </div>
         ) : (
-          <div className="glass-card overflow-hidden">
-            <div className="overflow-x-auto">
+          <>
+            <div className="md:hidden space-y-3">
+              {media.map((item) => (
+                <div key={item.id} className="border border-border bg-card p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-10 h-10 border border-border bg-background flex items-center justify-center">
+                        {getIcon()}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-medium truncate">{item.title}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(item.created_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDelete(item)}
+                      disabled={deleting === item.id}
+                      className="text-destructive hover:text-destructive"
+                      aria-label="Delete"
+                    >
+                      {deleting === item.id ? (
+                        <div className="w-4 h-4 border-2 border-destructive border-t-transparent rounded-none animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  {item.description && (
+                    <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
+                      {item.description}
+                    </p>
+                  )}
+                  <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-muted-foreground">
+                    <div className="border border-border px-2 py-1 flex items-center justify-between">
+                      <span>VIEWS</span>
+                      <span className="text-foreground">{item.view_count}</span>
+                    </div>
+                    <div className="border border-border px-2 py-1 flex items-center justify-between">
+                      <span>DL</span>
+                      <span className="text-foreground">{item.download_count}</span>
+                    </div>
+                    <div className="border border-border px-2 py-1 flex items-center justify-between col-span-2">
+                      <span>STATUS</span>
+                      <span className={item.is_published ? 'text-foreground' : 'text-muted-foreground'}>
+                        {item.is_published ? 'Published' : 'Draft'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="hidden md:block border border-border bg-card overflow-hidden">
+              <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-secondary/50">
+                <thead className="bg-secondary/30">
                   <tr>
                     <th className="text-left p-4 font-medium">Title</th>
                     <th className="text-left p-4 font-medium">Date</th>
@@ -100,10 +157,10 @@ const MediaList = ({ type, title }: MediaListProps) => {
                 </thead>
                 <tbody>
                   {media.map((item) => (
-                    <tr key={item.id} className="border-t border-border hover:bg-secondary/30 transition-colors">
+                    <tr key={item.id} className="border-t border-border hover:bg-secondary/20 transition-colors">
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <div className="w-10 h-10 border border-border bg-background flex items-center justify-center">
                             {getIcon()}
                           </div>
                           <div>
@@ -130,10 +187,10 @@ const MediaList = ({ type, title }: MediaListProps) => {
                         </span>
                       </td>
                       <td className="p-4 text-center">
-                        <span className={`px-2 py-1 rounded-full text-xs ${
-                          item.is_published 
-                            ? 'bg-green-500/20 text-green-400' 
-                            : 'bg-muted text-muted-foreground'
+                        <span className={`px-2 py-1 border border-border text-xs ${     
+                          item.is_published
+                            ? 'text-foreground'
+                            : 'text-muted-foreground'
                         }`}>
                           {item.is_published ? 'Published' : 'Draft'}
                         </span>
@@ -148,7 +205,7 @@ const MediaList = ({ type, title }: MediaListProps) => {
                             className="text-destructive hover:text-destructive"
                           >
                             {deleting === item.id ? (
-                              <div className="w-4 h-4 border-2 border-destructive border-t-transparent rounded-full animate-spin" />
+                              <div className="w-4 h-4 border-2 border-destructive border-t-transparent rounded-none animate-spin" />
                             ) : (
                               <Trash2 className="h-4 w-4" />
                             )}
@@ -160,7 +217,8 @@ const MediaList = ({ type, title }: MediaListProps) => {
                 </tbody>
               </table>
             </div>
-          </div>
+            </div>
+          </>
         )}
       </main>
     </div>
