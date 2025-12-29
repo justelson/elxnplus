@@ -51,14 +51,8 @@ const MediaCard = ({ item }: MediaCardProps) => {
 
   return (
     <>
-      <div className="group relative border border-border bg-card hover:bg-accent/5 transition-colors duration-200">
-        {/* Corner Accents */}
-        <div className="absolute top-0 left-0 w-2 h-2 border-l-2 border-t-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-        <div className="absolute top-0 right-0 w-2 h-2 border-r-2 border-t-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-        <div className="absolute bottom-0 left-0 w-2 h-2 border-l-2 border-b-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-        <div className="absolute bottom-0 right-0 w-2 h-2 border-r-2 border-b-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-
-        <div className="p-4 flex flex-col h-full rounded-none">
+      <div className="border border-border bg-card hover:bg-muted/20 transition-colors duration-200">
+        <div className="p-4 flex flex-col h-full">
           <div className="flex items-start justify-between mb-4">
             <div className="p-2 border border-border bg-background">
               {getIcon()}

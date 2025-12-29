@@ -23,7 +23,7 @@ const AdminSidebar = () => {
   };
 
   return (
-    <aside className="hidden md:flex w-64 h-screen sticky top-0 bg-background border-r border-border flex-col shadow-[4px_0_0_0_rgba(0,0,0,0.1)] z-40">
+    <aside className="hidden md:flex w-64 h-screen sticky top-0 bg-background border-r border-border flex-col z-30">
       <div className="p-6 border-b border-border bg-muted/10">
         <h1 className="text-2xl font-display font-bold tracking-widest uppercase">ELXN.ADMIN</h1>
         <p className="text-xs font-mono text-muted-foreground uppercase tracking-widest">System Control</p>
