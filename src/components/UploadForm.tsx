@@ -6,13 +6,15 @@ import { Textarea } from './ui/textarea';
 import WysiwygEditor from './WysiwygEditor';
 import { MediaType, uploadFile, createMedia } from '@/hooks/useMedia';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 interface UploadFormProps {
   onSuccess?: () => void;
+  initialType?: MediaType;
 }
 
-const UploadForm = ({ onSuccess }: UploadFormProps) => {
-  const [mediaType, setMediaType] = useState<MediaType>('audio');
+const UploadForm = ({ onSuccess, initialType }: UploadFormProps) => {
+  const [mediaType, setMediaType] = useState<MediaType>(initialType || 'audio');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [content, setContent] = useState('');
@@ -106,150 +108,172 @@ const UploadForm = ({ onSuccess }: UploadFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Media Type Selection */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {mediaTypes.map(({ type, icon: Icon, label }) => (
-          <button
-            key={type}
-            type="button"
-            onClick={() => setMediaType(type)}
-            className={`glass-card p-4 flex flex-col items-center gap-2 transition-all ${
-              mediaType === type 
-                ? 'ring-2 ring-primary bg-primary/10' 
-                : 'hover:bg-secondary/50'
-            }`}
-          >
-            <Icon className={`h-6 w-6 ${mediaType === type ? 'text-primary' : 'text-muted-foreground'}`} />
-            <span className={`text-sm font-medium ${mediaType === type ? 'text-primary' : ''}`}>
-              {label}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {/* Title */}
-      <div>
-        <label className="block text-sm font-medium mb-2">Title</label>
-        <Input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter title..."
-          className="bg-input border-border"
-        />
-      </div>
-
-      {/* Description */}
-      <div>
-        <label className="block text-sm font-medium mb-2">Description (optional)</label>
-        <Textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Enter description..."
-          className="bg-input border-border resize-none"
-          rows={3}
-        />
-      </div>
-
-      {/* File Upload (not for notes) */}
-      {mediaType !== 'note' && (
-        <div>
-          <label className="block text-sm font-medium mb-2">File</label>
-          <div className="glass-card p-6 text-center">
-            {file ? (
-              <div className="flex items-center justify-between">
-                <span className="text-sm truncate">{file.name}</span>
-                <Button 
-                  type="button" 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => setFile(null)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ) : (
-              <label className="cursor-pointer block">
-                <input
-                  type="file"
-                  accept={getAcceptedFiles()}
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  className="hidden"
-                />
-                <div className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-                  <Upload className="h-8 w-8" />
-                  <span className="text-sm">Click to upload {mediaType}</span>
-                </div>
-              </label>
-            )}
-          </div>
+    <form onSubmit={handleSubmit} className="space-y-8">
+      {/* Media Type Selection - Only show if no initialType is provided */}
+      {!initialType && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {mediaTypes.map(({ type, icon: Icon, label }) => (
+            <button
+              key={type}
+              type="button"
+              onClick={() => setMediaType(type)}
+              className={cn(
+                "flex flex-col items-center justify-center p-6 rounded-2xl border transition-all duration-300",
+                mediaType === type 
+                  ? "bg-primary/10 border-primary text-primary shadow-lg shadow-primary/10 scale-105" 
+                  : "bg-card/50 border-border text-muted-foreground hover:bg-card hover:border-border/80 hover:scale-[1.02]"
+              )}
+            >
+              <Icon className="h-6 w-6 mb-3" />
+              <span className="text-sm font-medium">{label}</span>
+            </button>
+          ))}
         </div>
       )}
 
-      {/* WYSIWYG Editor (for notes) */}
-      {mediaType === 'note' && (
-        <div>
-          <label className="block text-sm font-medium mb-2">Content</label>
-          <WysiwygEditor 
-            content={content} 
-            onChange={setContent}
-            placeholder="Write your note here..."
+      <div className="grid gap-6">
+        {/* Title */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium ml-1">Title</label>
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder={`Enter ${mediaType} title...`}
+            className="h-12 bg-white/5 border-white/10 rounded-xl focus:border-primary/50 transition-all"
           />
         </div>
-      )}
 
-      {/* Thumbnail Upload */}
-      {(mediaType === 'audio' || mediaType === 'video') && (
-        <div>
-          <label className="block text-sm font-medium mb-2">Thumbnail (optional)</label>
-          <div className="glass-card p-4">
-            {thumbnail ? (
-              <div className="flex items-center justify-between">
-                <span className="text-sm truncate">{thumbnail.name}</span>
-                <Button 
-                  type="button" 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => setThumbnail(null)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ) : (
-              <label className="cursor-pointer block">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setThumbnail(e.target.files?.[0] || null)}
-                  className="hidden"
-                />
-                <div className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
-                  <Upload className="h-4 w-4" />
-                  <span>Upload thumbnail image</span>
-                </div>
-              </label>
-            )}
-          </div>
+        {/* Description */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium ml-1">Description (optional)</label>
+          <Textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Add a brief description..."
+            className="min-h-[100px] bg-white/5 border-white/10 rounded-xl focus:border-primary/50 transition-all resize-y"
+          />
         </div>
-      )}
 
-      {/* Submit Button */}
+        {/* File Upload */}
+        {mediaType !== 'note' && (
+          <div className="space-y-2">
+            <label className="text-sm font-medium ml-1">File</label>
+            <div className={cn(
+              "border-2 border-dashed rounded-2xl p-8 transition-colors text-center",
+              file ? "border-primary/50 bg-primary/5" : "border-white/10 hover:border-primary/30 hover:bg-white/5"
+            )}>
+              {file ? (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/20">
+                      <FileText className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm font-medium truncate max-w-[200px]">{file.name}</p>
+                      <p className="text-xs text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                    </div>
+                  </div>
+                  <Button 
+                    type="button" 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => setFile(null)}
+                    className="hover:text-destructive"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <label className="cursor-pointer flex flex-col items-center gap-4">
+                  <input
+                    type="file"
+                    accept={getAcceptedFiles()}
+                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                    className="hidden"
+                  />
+                  <div className="p-4 rounded-full bg-white/5">
+                    <Upload className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Click to upload or drag and drop</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {mediaType === 'audio' && 'MP3, WAV up to 50MB'}
+                      {mediaType === 'video' && 'MP4, MOV up to 100MB'}
+                      {mediaType === 'document' && 'PDF, DOCX up to 20MB'}
+                    </p>
+                  </div>
+                </label>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* WYSIWYG Editor */}
+        {mediaType === 'note' && (
+          <div className="space-y-2">
+            <label className="text-sm font-medium ml-1">Content</label>
+            <div className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+              <WysiwygEditor 
+                content={content} 
+                onChange={setContent}
+                placeholder="Start writing..."
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Thumbnail Upload */}
+        {(mediaType === 'audio' || mediaType === 'video') && (
+          <div className="space-y-2">
+            <label className="text-sm font-medium ml-1">Thumbnail (optional)</label>
+            <div className={cn(
+              "border border-dashed rounded-xl p-4 transition-colors",
+              thumbnail ? "border-primary/50 bg-primary/5" : "border-white/10 hover:border-primary/30 hover:bg-white/5"
+            )}>
+              {thumbnail ? (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm truncate">{thumbnail.name}</span>
+                  <Button 
+                    type="button" 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => setThumbnail(null)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <label className="cursor-pointer flex items-center justify-center gap-3 py-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setThumbnail(e.target.files?.[0] || null)}
+                    className="hidden"
+                  />
+                  <Upload className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Upload cover image</span>
+                </label>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
       <Button 
         type="submit" 
-        variant="glow" 
         size="lg" 
-        className="w-full"
+        className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
         disabled={uploading}
       >
         {uploading ? (
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+          <>
+            <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
             Uploading...
-          </div>
+          </>
         ) : (
           <>
-            <Upload className="h-5 w-5" />
-            Upload {mediaType.charAt(0).toUpperCase() + mediaType.slice(1)}
+            <Upload className="h-4 w-4 mr-2" />
+            Upload Media
           </>
         )}
       </Button>

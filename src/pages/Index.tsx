@@ -1,128 +1,181 @@
-import { Music, Video, FileText, StickyNote, Lock, Cpu, Activity, Battery, Wifi } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
-import { useMedia, MediaType } from '@/hooks/useMedia';
-import MediaCard from '@/components/MediaCard';
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import { useMedia, MediaType } from "@/hooks/useMedia";
+import MediaCard from "@/components/MediaCard";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search, Loader2, Sparkles, FolderOpen } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const Index = () => {
-  const navigate = useNavigate();
-  const [activeFilter, setActiveFilter] = useState<MediaType | 'all'>('all');
-  const { media, loading } = useMedia();
-  const [systemTime, setSystemTime] = useState(new Date());
+  const [activeFilter, setActiveFilter] = useState<MediaType | "all">("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const { media, loading, error } = useMedia(activeFilter === "all" ? undefined : activeFilter);
 
-  useEffect(() => {
-    const timer = setInterval(() => setSystemTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const { scrollY } = useScroll();
+  
+  // Progressive transforms based on scroll (0 to 250px)
+  const xOpacity = useTransform(scrollY, [0, 100], [1, 0]);
+  const sOpacity = useTransform(scrollY, [50, 150], [0, 1]);
+  const oOpacity = useTransform(scrollY, [100, 200], [0, 1]);
+  const oWidth = useTransform(scrollY, [100, 200], ["0em", "0.65em"]);
+  const oScale = useTransform(scrollY, [100, 200], [0.5, 1]);
 
-  const filteredMedia = activeFilter === 'all'
-    ? media
-    : media.filter(item => item.type === activeFilter);
+  const filteredMedia = media.filter(item => 
+    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
-  const filters: { type: MediaType | 'all'; label: string }[] = [
-    { type: 'all', label: 'ALL_DATA' },
-    { type: 'audio', label: 'AUDIO_LOGS' },
-    { type: 'video', label: 'VISUAL_FEEDS' },
-    { type: 'document', label: 'DOCUMENTS' },
-    { type: 'note', label: 'TEXT_FILES' },
+  const filters: { label: string; value: MediaType | "all" }[] = [
+    { label: "Everything", value: "all" },
+    { label: "Audio Logs", value: "audio" },
+    { label: "Video Feeds", value: "video" },
+    { label: "Documents", value: "document" },
+    { label: "Personal Notes", value: "note" },
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-mono selection:bg-primary selection:text-primary-foreground">
-      {/* System HUD Header */}
-      <header className="border-b border-border bg-background sticky top-0 z-50">
-        <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-primary">
-              <Cpu className="h-5 w-5" />
-              <span className="font-display font-bold text-xl tracking-widest hidden sm:inline">ELXN.PLUS</span>
-              <span className="font-display font-bold text-xl tracking-widest sm:hidden">ELXN+</span>
-            </div>
-            <div className="hidden md:flex h-6 w-px bg-border mx-2" />
-            <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="animate-pulse flex items-center gap-1"><Activity className="h-3 w-3" /> SYS.ONLINE</span>
-              <span>::</span>
-              <span>v2.0.4</span>
-            </div>
-          </div>
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground font-sans flex flex-col">
+      <Navbar />
 
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex flex-col items-end text-[10px] leading-tight text-muted-foreground">
-              <span>{systemTime.toLocaleTimeString()}</span>
-              <span>{systemTime.toLocaleDateString()}</span>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate('/login')}
-              className="rounded-none border-primary hover:bg-primary hover:text-primary-foreground uppercase text-xs tracking-wider"
-            >
-              <Lock className="h-3 w-3 mr-2" />
-              Admin_Access
-            </Button>
+      <main className="flex-1 container mx-auto px-4 pt-32 pb-20 md:px-6">
+        {/* Hero Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="max-w-4xl mx-auto text-center mb-20 space-y-8"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-mono font-bold uppercase tracking-widest mb-4">
+            <Sparkles className="h-3 w-3" /> Elson's Digital Vault
           </div>
-        </div>
-
-        {/* Status Bar */}
-        <div className="border-b border-border bg-muted/20">
-          <div className="container mx-auto px-4 py-1 flex justify-between items-center text-[10px] uppercase text-muted-foreground tracking-widest">
-            <div className="flex gap-4">
-              <span className="flex items-center gap-1"><Wifi className="h-3 w-3" /> NET_OK</span>
-              <span className="flex items-center gap-1"><Battery className="h-3 w-3" /> PWR_STABLE</span>
-            </div>
-            <div className="flex gap-4">
-              <span>MEM_USAGE: 42%</span>
-              <span>SEC_LEVEL: ALPHA</span>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Interface */}
-      <main className="container mx-auto px-4 py-8">
-        {/* Control Panel (Filters) */}
-        <div className="mb-8 border border-border p-1 bg-card">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-1">
-            {filters.map(({ type, label }) => (
-              <button
-                key={type}
-                onClick={() => setActiveFilter(type)}
-                className={`py-2 px-4 text-xs font-bold font-mono uppercase tracking-wider transition-all
-                  ${activeFilter === type
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-background hover:bg-accent hover:text-accent-foreground text-muted-foreground'}
-                `}
+          
+          <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/40 leading-[0.9]">
+            The Artifacts <br /> of{" "}
+            <span className="text-primary inline-flex items-baseline relative gap-[0.02em]">
+              <span>E</span>
+              <span>l</span>
+              <span className="relative inline-flex w-[0.45em] justify-start">
+                <motion.span 
+                  style={{ opacity: xOpacity }} 
+                  className="text-orange-600 dark:text-orange-300"
+                >
+                  x
+                </motion.span>
+                <motion.span 
+                  style={{ opacity: sOpacity }} 
+                  className="absolute left-0"
+                >
+                  s
+                </motion.span>
+              </span>
+              <motion.span 
+                style={{ width: oWidth }}
+                className="inline-block overflow-hidden relative pr-[0.05em]"
               >
-                [{label}]
-              </button>
-            ))}
+                <motion.span
+                  style={{ opacity: oOpacity, scale: oScale }}
+                  className="inline-block origin-left"
+                >
+                  o
+                </motion.span>
+              </motion.span>
+              <span>n</span>
+            </span>
+          </h1>
+          
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
+            Welcome to my personal space. This is where I share my files, media, and digital experiments. 
+            Everything is curated and free to explore.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <div className="relative w-full max-w-md group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              <Input 
+                placeholder="Search through the vault..." 
+                className="pl-12 h-14 bg-secondary/30 border-border focus:border-primary/50 transition-all rounded-2xl text-base shadow-lg"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
           </div>
+        </motion.div>
+
+        {/* Filters and Section Header */}
+        <div className="space-y-8 mb-12">
+          <div className="flex items-center gap-4">
+            <FolderOpen className="h-5 w-5 text-primary" />
+            <h2 className="text-xl font-display font-bold uppercase tracking-widest">Library Collections</h2>
+            <div className="h-px bg-gradient-to-r from-primary/50 to-transparent flex-1" />
+          </div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="flex flex-wrap items-center gap-3"
+          >
+            {filters.map((filter) => (
+              <Button
+                key={filter.value}
+                variant={activeFilter === filter.value ? "default" : "outline"}
+                onClick={() => setActiveFilter(filter.value)}
+                className={cn(
+                  "rounded-xl px-6 h-10 transition-all duration-300 font-medium",
+                  activeFilter === filter.value 
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+                    : "hover:bg-primary/5 hover:border-primary/30"
+                )}
+              >
+                {filter.label}
+              </Button>
+            ))}
+          </motion.div>
         </div>
 
-        {/* Data Grid */}
+        {/* Content Grid */}
         {loading ? (
-          <div className="flex justify-center py-20">
-            <div className="flex flex-col items-center gap-2 text-primary">
-              <Cpu className="h-8 w-8 animate-spin" />
-              <span className="text-xs font-mono animate-pulse">LOADING_DATA_STREAMS...</span>
-            </div>
+          <div className="flex flex-col justify-center items-center py-32 gap-4">
+            <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            <p className="text-muted-foreground font-mono text-sm animate-pulse">Initializing vault access...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center text-destructive py-20 border border-destructive/20 rounded-3xl bg-destructive/5">
+            <p className="font-bold">Access Denied</p>
+            <p className="text-sm opacity-80 mt-1">Failed to retrieve artifacts from the database.</p>
           </div>
         ) : filteredMedia.length === 0 ? (
-          <div className="border border-dashed border-border p-20 text-center">
-            <h3 className="text-xl font-display font-medium mb-2 uppercase">No Data Found</h3>
-            <p className="text-muted-foreground text-xs font-mono">System cache is empty. Awaiting input.</p>
+          <div className="text-center text-muted-foreground py-32 border border-dashed border-white/5 rounded-3xl">
+            <p className="text-xl font-light italic">This section of the vault is currently empty.</p>
+            <Button variant="link" onClick={() => {setSearchQuery(""); setActiveFilter("all");}} className="mt-2 text-primary">
+              Clear all filters
+            </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          >
             {filteredMedia.map((item, index) => (
-              <div key={item.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.05}s` }}>
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+              >
                 <MediaCard item={item} />
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </main>
+
+      <Footer />
     </div>
   );
 };

@@ -126,3 +126,26 @@ export const incrementDownloadCount = async (id: string): Promise<void> => {
     console.error('Error incrementing download count:', err);
   }
 };
+
+export const downloadMedia = async (id: string, fileUrl: string, fileName: string): Promise<void> => {
+  try {
+    // 1. Increment count
+    await incrementDownloadCount(id);
+
+    // 2. Direct download
+    const response = await fetch(fileUrl);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode?.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error('Error downloading media:', err);
+    // Fallback to opening in new tab if blob download fails
+    window.open(fileUrl, '_blank');
+  }
+};

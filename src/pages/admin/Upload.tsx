@@ -1,36 +1,46 @@
-import AdminSidebar from '@/components/AdminSidebar';
-import AdminMobileHeader from '@/components/AdminMobileHeader';
 import UploadForm from '@/components/UploadForm';
-import { isAdminLoggedIn } from '@/lib/auth';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { MediaType } from '@/hooks/useMedia';
 
 const Upload = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!isAdminLoggedIn()) {
-      navigate('/login');
-    }
-  }, [navigate]);
+  const { type } = useParams<{ type: string }>();
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <AdminSidebar />
-      
-      <main className="flex-1 p-4 md:p-8">
-        <AdminMobileHeader title="Upload" />
-        <div className="max-w-2xl mx-auto mt-4 md:mt-0">
-          <div className="mb-6 md:mb-8">
-            <h1 className="text-3xl font-display font-bold mb-2">Upload Media</h1>
-            <p className="text-muted-foreground">Add new audio, video, documents, or notes to your library.</p>
-          </div>
-
-          <div className="border border-border bg-card p-4 md:p-6">
-            <UploadForm onSuccess={() => navigate('/admin')} />
-          </div>
+    <div className="space-y-6 md:space-y-8 max-w-4xl mx-auto animate-fade-in pb-10">
+      <div className="flex flex-col gap-4">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => navigate(type ? `/admin/${type === 'note' ? 'notes' : type === 'document' ? 'documents' : type}` : '/admin')}
+          className="w-fit -ml-2 text-muted-foreground hover:text-primary transition-colors"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
+        
+        <div>
+          <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight uppercase">
+            {type ? `Initialize ${type} Archive` : 'Archive Artifact'}
+          </h1>
+          <p className="text-muted-foreground mt-1 text-sm">Upload new content to the digital vault.</p>
         </div>
-      </main>
+      </div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="rounded-2xl md:rounded-3xl border border-border bg-card/30 backdrop-blur-md p-5 md:p-10 shadow-2xl"
+      >
+        <UploadForm 
+          initialType={type as MediaType} 
+          onSuccess={() => navigate(type ? `/admin/${type === 'note' ? 'notes' : type === 'document' ? 'documents' : type}` : '/admin')} 
+        />
+      </motion.div>
     </div>
   );
 };

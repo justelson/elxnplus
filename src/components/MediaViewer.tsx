@@ -1,6 +1,7 @@
-import { X, Download, FileText, Music, Video, StickyNote } from 'lucide-react';
+import { X, Download, FileText, Music, Video, StickyNote, Calendar, Database } from 'lucide-react';
 import { Button } from './ui/button';
-import { MediaItem, incrementDownloadCount } from '@/hooks/useMedia';
+import { MediaItem, incrementDownloadCount, downloadMedia } from '@/hooks/useMedia';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface MediaViewerProps {
   item: MediaItem;
@@ -8,105 +9,77 @@ interface MediaViewerProps {
 }
 
 const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
-  const handleDownload = async () => {
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (item.file_url) {
-      await incrementDownloadCount(item.id);
-      window.open(item.file_url, '_blank');
+      await downloadMedia(item.id, item.file_url, item.title);
     }
   };
 
   const getTypeIcon = () => {
     switch (item.type) {
-      case 'audio': return <Music className="h-4 w-4" />;
-      case 'video': return <Video className="h-4 w-4" />;
-      case 'document': return <FileText className="h-4 w-4" />;
-      case 'note': return <StickyNote className="h-4 w-4" />;
+      case 'audio': return <Music className="h-5 w-5 text-orange-400" />;
+      case 'video': return <Video className="h-5 w-5 text-rose-400" />;
+      case 'document': return <FileText className="h-5 w-5 text-yellow-400" />;
+      case 'note': return <StickyNote className="h-5 w-5 text-orange-500" />;
     }
   }
 
   const renderContent = () => {
+    if (!item.file_url && item.type !== 'note') return null;
+
     switch (item.type) {
       case 'audio':
         return (
-          <div className="w-full max-w-xl">
-            <div className="bg-card border border-border p-1">
-              <div className="bg-background p-8 flex flex-col items-center gap-8 relative overflow-hidden border-b border-border">
-                {/* Audio Visualizer Placeholder */}
-                <div className="flex items-end justify-center gap-1 h-32 w-full opacity-50">
-                  {[...Array(20)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="w-2 bg-primary animate-[pulse_1s_ease-in-out_infinite]"
-                      style={{
-                        height: `${Math.random() * 100}%`,
-                        animationDelay: `${i * 0.05}s`
-                      }}
-                    />
-                  ))}
-                </div>
-
-                <div className="w-24 h-24 flex items-center justify-center border-2 border-primary rounded-none relative z-10 bg-background">
-                  <Music className="h-10 w-10 text-primary" />
-                </div>
-              </div>
-
-              <div className="p-4 bg-background font-mono text-xs border-t border-border">
-                <audio controls className="w-full h-8" autoPlay>
-                  <source src={item.file_url || ''} />
-                  SYSTEM_AUDIO_DRIVER_ERROR
-                </audio>
+          <div className="w-full max-w-md mx-auto space-y-8 px-4">
+            <div className="aspect-square bg-gradient-to-br from-orange-500/20 to-amber-500/10 rounded-3xl flex items-center justify-center border border-white/10 shadow-2xl relative overflow-hidden group">
+              <div className="absolute inset-0 bg-noise opacity-20" />
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-primary/20 flex items-center justify-center animate-pulse-glow">
+                <Music className="h-10 w-10 md:h-12 md:w-12 text-primary" />
               </div>
             </div>
+            <audio controls className="w-full shadow-lg rounded-full" autoPlay>
+              <source src={item.file_url!} />
+              Your browser does not support the audio element.
+            </audio>
           </div>
         );
 
       case 'video':
         return (
-          <div className="w-full max-w-4xl">
-            <div className="bg-card border border-border p-1">
-              <div className="relative border border-border bg-black">
-                {/* Video Frame Decorations */}
-                <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-border/60 pointer-events-none z-10" />
-                <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-border/60 pointer-events-none z-10" />
-                <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-border/60 pointer-events-none z-10" />
-                <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-border/60 pointer-events-none z-10" />
-
-                <video controls className="w-full bg-black aspect-video relative z-0" autoPlay>
-                  <source src={item.file_url || ''} />
-                  SYSTEM_VIDEO_DRIVER_ERROR
-                </video>
-              </div>
-            </div>
+          <div className="w-full max-w-5xl mx-auto rounded-xl md:rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-black">
+            <video controls className="w-full aspect-video" autoPlay>
+              <source src={item.file_url!} />
+              Your browser does not support the video element.
+            </video>
           </div>
         );
 
       case 'document':
         return (
-          <div className="w-full max-w-4xl h-[70vh] flex flex-col">
-            <div className="bg-card border border-border p-4 flex-1 flex flex-col items-center justify-center gap-4">
-              {item.file_url?.endsWith('.pdf') ? (
-                <iframe
-                  src={item.file_url}
-                  className="w-full h-full border border-border bg-background"
-                />
-              ) : (
-                <div className="text-center p-12 border border-dashed border-border bg-background">
-                  <FileText className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                  <p className="mb-6 font-mono text-sm text-muted-foreground">PREVIEW_UNAVAILABLE. DOWNLOAD_REQUIRED.</p>
-                  <Button variant="outline" size="lg" onClick={handleDownload} className="rounded-none border-primary hover:bg-primary hover:text-primary-foreground font-mono uppercase">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download_File
-                  </Button>
-                </div>
-              )}
-            </div>
+          <div className="w-full h-[70vh] md:h-[80vh] bg-white rounded-xl overflow-hidden shadow-2xl">
+            {item.file_url!.endsWith('.pdf') ? (
+              <iframe
+                src={item.file_url!}
+                className="w-full h-full"
+                title="Document Viewer"
+              />
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center text-gray-900 p-8">
+                <FileText className="h-16 w-16 mb-4 text-gray-400" />
+                <p className="text-lg font-medium mb-2">Preview unavailable</p>
+                <Button onClick={handleDownload} className="rounded-full">
+                  Download to View
+                </Button>
+              </div>
+            )}
           </div>
         );
 
       case 'note':
         return (
-          <div className="w-full max-w-2xl max-h-[70vh] overflow-y-auto custom-scrollbar">
-            <div className="bg-card border border-border p-8 prose max-w-none font-mono text-sm">
+          <div className="w-full max-w-3xl mx-auto bg-card border border-white/10 p-5 md:p-10 rounded-2xl md:rounded-3xl shadow-2xl max-h-[75vh] md:max-h-[80vh] overflow-y-auto">
+            <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-headings:font-display prose-headings:font-bold prose-p:font-light prose-p:leading-relaxed">
               <div dangerouslySetInnerHTML={{ __html: item.content || '' }} />
             </div>
           </div>
@@ -115,40 +88,70 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/95 p-4 animate-in fade-in duration-200">
-
-      <div className="relative w-full max-w-4xl flex flex-col border border-border bg-card">
-        {/* Modal Header */}
-        <div className="bg-background border-b border-border p-2 flex items-center justify-between">
-          <div className="flex items-center gap-2 px-2">
-            <span className="text-primary">{getTypeIcon()}</span>
-            <span className="font-mono text-xs font-bold uppercase tracking-wider text-primary">
-              DATA_VIEWER :: {item.title || 'UNKNOWN_FILE'}
-            </span>
+    <AnimatePresence>
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-2xl p-4 md:p-8"
+        onClick={onClose}
+      >
+        <motion.div 
+          initial={{ scale: 0.95, y: 20, opacity: 0 }}
+          animate={{ scale: 1, y: 0, opacity: 1 }}
+          exit={{ scale: 0.95, y: 20, opacity: 0 }}
+          className="relative w-full h-full flex flex-col"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6 md:mb-8">
+            <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="rounded-full h-9 w-9 md:h-10 md:w-10 border-white/10 hover:bg-white/10 shrink-0"
+                onClick={onClose}
+              >
+                <X className="h-4 w-4 md:h-5 md:w-5" />
+              </Button>
+              <div className="min-w-0">
+                <h2 className="text-base md:text-xl font-display font-bold leading-none flex items-center gap-2 truncate">
+                  <span className="shrink-0">{getTypeIcon()}</span>
+                  <span className="truncate">{item.title}</span>
+                </h2>
+                <div className="flex items-center gap-2 md:gap-3 text-[10px] md:text-xs text-muted-foreground mt-1.5 md:mt-2 font-mono uppercase tracking-widest">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    {new Date(item.created_at).toLocaleDateString()}
+                  </span>
+                  {item.file_size && item.type !== 'note' && (
+                    <>
+                      <div className="w-1 h-1 rounded-full bg-white/20" />
+                      <span className="flex items-center gap-1">
+                        <Database className="h-3 w-3" />
+                        {(item.file_size / 1024 / 1024).toFixed(2)} MB
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            {item.file_url && (
+              <Button onClick={handleDownload} className="rounded-full gap-2 shadow-lg shadow-primary/20 shrink-0">
+                <Download className="h-4 w-4" />
+                <span className="hidden sm:inline">Download</span>
+              </Button>
+            )}
           </div>
-          <button
-            onClick={onClose}
-            className="p-1 border border-border hover:bg-foreground hover:text-background transition-colors"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
 
-        {/* Content Container */}
-        <div className="relative flex justify-center bg-background">
-          {renderContent()}
-        </div>
-
-        {/* Modal Footer Info */}
-        <div className="bg-background border-t border-border flex justify-between items-center text-[10px] font-mono text-muted-foreground px-4 py-2">
-          <span>ID: {item.id.slice(0, 8)}...</span>
-          <div className="flex gap-4">
-            {item.file_size && <span>SIZE: {(item.file_size / 1024).toFixed(1)}KB</span>}
-            {item.duration && <span>DUR: {item.duration}s</span>}
+          {/* Content Area */}
+          <div className="flex-1 flex items-center justify-center overflow-hidden">
+            {renderContent()}
           </div>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
