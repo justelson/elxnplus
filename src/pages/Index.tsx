@@ -132,7 +132,7 @@ const Index = () => {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
               <Input 
                 placeholder="Search through the vault..." 
-                className="pl-12 h-14 bg-secondary/30 border-border focus:border-primary/50 transition-all rounded-lg text-base shadow-lg"
+                className="pl-12 h-14 bg-secondary/30 border-border focus:border-primary/50 transition-all rounded-sm text-base shadow-lg"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -161,7 +161,7 @@ const Index = () => {
                 variant={activeFilter === filter.value ? "default" : "outline"}
                 onClick={() => setActiveFilter(filter.value)}
                 className={cn(
-                  "rounded-md px-6 h-10 transition-all duration-300 font-medium",
+                  "rounded-sm px-6 h-10 transition-all duration-300 font-medium",
                   activeFilter === filter.value 
                     ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
                     : "hover:bg-primary/5 hover:border-primary/30"
@@ -180,14 +180,14 @@ const Index = () => {
             <p className="text-muted-foreground font-mono text-sm animate-pulse">Initializing vault access...</p>
           </div>
         ) : error ? (
-          <div className="text-center text-muted-foreground py-20 border border-white/5 rounded-md bg-card/30">
+          <div className="text-center text-muted-foreground py-20 border border-white/5 rounded-sm bg-card/30">
             <p className="font-display text-xl font-bold text-foreground">The vault did not load cleanly.</p>
             <p className="text-sm opacity-80 mt-2 max-w-md mx-auto">
               This usually means the connection was blocked or the archive is temporarily unavailable. Refresh the page and try again.
             </p>
           </div>
         ) : filteredMedia.length === 0 ? (
-          <div className="text-center text-muted-foreground py-32 border border-dashed border-white/5 rounded-md bg-card/20">
+          <div className="text-center text-muted-foreground py-32 border border-dashed border-white/5 rounded-sm bg-card/20">
             <p className="text-xl font-display font-bold text-foreground">Nothing available here yet.</p>
             <p className="text-sm opacity-80 mt-2 max-w-md mx-auto">
               There are no public files matching this view. Private files only appear after logging in through the admin area.

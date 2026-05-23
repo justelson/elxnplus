@@ -73,7 +73,7 @@ const WysiwygEditor = ({ content, onChange, placeholder = 'Start writing...' }: 
       onClick={onClick}
       title={title}
       className={cn(
-        'h-8 w-8 p-0 rounded-lg transition-colors',
+        'h-8 w-8 p-0 rounded-sm transition-colors',
         isActive 
           ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
           : 'text-muted-foreground hover:text-foreground hover:bg-white/10'
@@ -84,7 +84,7 @@ const WysiwygEditor = ({ content, onChange, placeholder = 'Start writing...' }: 
   );
 
   return (
-    <div className="flex flex-col border border-white/10 rounded-md bg-card/30 backdrop-blur-sm overflow-hidden focus-within:ring-1 focus-within:ring-primary/50 transition-all">
+    <div className="flex flex-col border border-white/10 rounded-sm bg-card/30 backdrop-blur-sm overflow-hidden focus-within:ring-1 focus-within:ring-primary/50 transition-all">
       <div className="flex flex-wrap gap-1 p-2 border-b border-white/10 bg-white/5">
         <div className="flex items-center gap-1 pr-2 border-r border-white/10">
           <ToolbarButton

@@ -118,7 +118,7 @@ const UploadForm = ({ onSuccess, initialType }: UploadFormProps) => {
               type="button"
               onClick={() => setMediaType(type)}
               className={cn(
-                "flex flex-col items-center justify-center p-6 rounded-lg border transition-all duration-300",
+                "flex flex-col items-center justify-center p-6 rounded-sm border transition-all duration-300",
                 mediaType === type 
                   ? "bg-primary/10 border-primary text-primary shadow-lg shadow-primary/10 scale-105" 
                   : "bg-card/50 border-border text-muted-foreground hover:bg-card hover:border-border/80 hover:scale-[1.02]"
@@ -139,7 +139,7 @@ const UploadForm = ({ onSuccess, initialType }: UploadFormProps) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={`Enter ${mediaType} title...`}
-            className="h-12 bg-white/5 border-white/10 rounded-md focus:border-primary/50 transition-all"
+            className="h-12 bg-white/5 border-white/10 rounded-sm focus:border-primary/50 transition-all"
           />
         </div>
 
@@ -150,7 +150,7 @@ const UploadForm = ({ onSuccess, initialType }: UploadFormProps) => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Add a brief description..."
-            className="min-h-[100px] bg-white/5 border-white/10 rounded-md focus:border-primary/50 transition-all resize-y"
+            className="min-h-[100px] bg-white/5 border-white/10 rounded-sm focus:border-primary/50 transition-all resize-y"
           />
         </div>
 
@@ -159,13 +159,13 @@ const UploadForm = ({ onSuccess, initialType }: UploadFormProps) => {
           <div className="space-y-2">
             <label className="text-sm font-medium ml-1">File</label>
             <div className={cn(
-              "border-2 border-dashed rounded-lg p-8 transition-colors text-center",
+              "border-2 border-dashed rounded-sm p-8 transition-colors text-center",
               file ? "border-primary/50 bg-primary/5" : "border-white/10 hover:border-primary/30 hover:bg-white/5"
             )}>
               {file ? (
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-primary/20">
+                    <div className="p-2 rounded-sm bg-primary/20">
                       <FileText className="h-5 w-5 text-primary" />
                     </div>
                     <div className="text-left">
@@ -212,7 +212,7 @@ const UploadForm = ({ onSuccess, initialType }: UploadFormProps) => {
         {mediaType === 'note' && (
           <div className="space-y-2">
             <label className="text-sm font-medium ml-1">Content</label>
-            <div className="rounded-md border border-white/10 bg-white/5 overflow-hidden">
+            <div className="rounded-sm border border-white/10 bg-white/5 overflow-hidden">
               <WysiwygEditor 
                 content={content} 
                 onChange={setContent}
@@ -227,7 +227,7 @@ const UploadForm = ({ onSuccess, initialType }: UploadFormProps) => {
           <div className="space-y-2">
             <label className="text-sm font-medium ml-1">Thumbnail (optional)</label>
             <div className={cn(
-              "border border-dashed rounded-md p-4 transition-colors",
+              "border border-dashed rounded-sm p-4 transition-colors",
               thumbnail ? "border-primary/50 bg-primary/5" : "border-white/10 hover:border-primary/30 hover:bg-white/5"
             )}>
               {thumbnail ? (
@@ -262,7 +262,7 @@ const UploadForm = ({ onSuccess, initialType }: UploadFormProps) => {
       <Button 
         type="submit" 
         size="lg" 
-        className="w-full h-12 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
+        className="w-full h-12 rounded-sm bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
         disabled={uploading}
       >
         {uploading ? (

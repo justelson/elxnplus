@@ -44,7 +44,7 @@ const Navbar = () => {
           to="/" 
           className="flex items-center gap-2 group"
         >
-          <div className="p-1.5 rounded-lg bg-primary shadow-lg shadow-primary/25 transition-transform group-hover:rotate-12">
+          <div className="p-1.5 rounded-sm bg-primary shadow-lg shadow-primary/25 transition-transform group-hover:rotate-12">
             <Zap className="h-5 w-5 text-white fill-white" />
           </div>
           <span className="text-2xl font-display font-black tracking-tighter text-foreground">
@@ -82,14 +82,14 @@ const Navbar = () => {
             </Button>
 
             {isAdmin ? (
-              <Button asChild variant="default" className="rounded-md px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
+              <Button asChild variant="default" className="rounded-sm px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
                 <Link to="/admin">
                   <LayoutDashboard className="mr-2 h-4 w-4" />
                   Admin Pan
                 </Link>
               </Button>
             ) : (
-              <Button asChild variant="outline" className="rounded-md px-6 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all">
+              <Button asChild variant="outline" className="rounded-sm px-6 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all">
                 <Link to="/login">
                   <LogIn className="mr-2 h-4 w-4" />
                   Access
@@ -141,11 +141,11 @@ const Navbar = () => {
                 </Button>
               </div>
               {isAdmin ? (
-                <Button asChild className="w-full h-12 rounded-md">
+                <Button asChild className="w-full h-12 rounded-sm">
                   <Link to="/admin" onClick={() => setIsOpen(false)}>Admin Panel</Link>
                 </Button>
               ) : (
-                <Button asChild variant="outline" className="w-full h-12 rounded-md">
+                <Button asChild variant="outline" className="w-full h-12 rounded-sm">
                   <Link to="/login" onClick={() => setIsOpen(false)}>Login</Link>
                 </Button>
               )}
