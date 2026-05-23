@@ -47,33 +47,34 @@ const Index = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative mb-20 w-full overflow-hidden text-center"
+          className="relative mb-20 flex min-h-[560px] w-full items-center justify-center overflow-hidden text-center md:min-h-[620px]"
         >
           <DitheringShader
-            className="pointer-events-none absolute inset-0 z-0 h-full w-full opacity-35 mix-blend-multiply dark:hidden"
+            className="pointer-events-none absolute inset-x-0 top-1/2 z-0 h-[420px] w-full -translate-y-1/2 opacity-25 mix-blend-multiply dark:hidden"
             width={1200}
-            height={460}
+            height={420}
             colorBack="#fff7ed"
             colorFront="#fb923c"
             shape="swirl"
             type="8x8"
-            pxSize={5}
-            speed={0.4}
+            pxSize={6}
+            speed={0.35}
             style={{ width: "100%", height: "100%" }}
           />
           <DitheringShader
-            className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full opacity-50 mix-blend-screen dark:block"
+            className="pointer-events-none absolute inset-x-0 top-1/2 z-0 hidden h-[420px] w-full -translate-y-1/2 opacity-35 mix-blend-screen dark:block"
             width={1200}
-            height={460}
+            height={420}
             colorBack="#050000"
             colorFront="#ff6a00"
             shape="swirl"
             type="8x8"
-            pxSize={5}
-            speed={0.4}
+            pxSize={6}
+            speed={0.35}
             style={{ width: "100%", height: "100%" }}
           />
-          <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-background/10 via-background/35 to-background dark:from-background/15" />
+          <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,transparent_0%,hsl(var(--background)/0.2)_42%,hsl(var(--background))_78%)]" />
+          <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-background via-background/35 to-background" />
           
           <div className="relative z-10 mx-auto max-w-4xl space-y-8 px-0">
             <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/40 leading-[0.9]">
