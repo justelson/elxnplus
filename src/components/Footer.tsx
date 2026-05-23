@@ -22,7 +22,7 @@ const Footer = () => {
                 href="mailto:elsonmgaya25@gmail.com" 
                 className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2 group"
               >
-                <div className="p-2 rounded-sm bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                <div className="p-2 rounded-none bg-primary/10 group-hover:bg-primary/20 transition-colors">
                   <Mail className="h-4 w-4 text-primary" />
                 </div>
                 elsonmgaya25@gmail.com
