@@ -5,9 +5,10 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Loader2, Sparkles, FolderOpen } from "lucide-react";
+import { Search, Loader2, FolderOpen } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { DitheringShader } from "@/components/DitheringShader";
 
 const Index = () => {
   const [activeFilter, setActiveFilter] = useState<MediaType | "all">("all");
@@ -46,11 +47,21 @@ const Index = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-4xl mx-auto text-center mb-20 space-y-8"
+          className="relative max-w-5xl mx-auto text-center mb-20 space-y-8 overflow-hidden rounded-[2.5rem] border border-primary/10 bg-background/30 px-4 py-16 shadow-2xl shadow-orange-950/20 md:px-10 md:py-24"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-mono font-bold uppercase tracking-widest mb-4">
-            <Sparkles className="h-3 w-3" /> Elson's Digital Vault
-          </div>
+          <DitheringShader
+            className="pointer-events-none absolute inset-0 -z-10 h-full w-full opacity-45 mix-blend-screen"
+            width={1200}
+            height={700}
+            colorBack="#050000"
+            colorFront="#ff6a00"
+            shape="warp"
+            type="8x8"
+            pxSize={5}
+            speed={0.45}
+            style={{ width: "100%", height: "100%" }}
+          />
+          <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-background/20 via-background/35 to-background" />
           
           <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/40 leading-[0.9]">
             The Artifacts <br /> of{" "}
