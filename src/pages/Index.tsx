@@ -29,6 +29,8 @@ const Index = () => {
     (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  const indexedCount = media.length;
+
   const filters: { label: string; value: MediaType | "all" }[] = [
     { label: "Everything", value: "all" },
     { label: "Audio Logs", value: "audio" },
@@ -51,32 +53,39 @@ const Index = () => {
         >
           <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[440px] w-[min(100%,1180px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden">
             <DitheringShader
-              className="h-full w-full opacity-25 mix-blend-multiply dark:hidden"
+              className="h-full w-full opacity-45 mix-blend-multiply dark:hidden"
               width={1180}
               height={440}
               colorBack="#fff7ed"
               colorFront="#fb923c"
               shape="swirl"
               type="8x8"
-              pxSize={6}
-              speed={0.35}
+              pxSize={7}
+              speed={0.25}
               style={{ width: "100%", height: "100%" }}
             />
             <DitheringShader
-              className="hidden h-full w-full opacity-35 mix-blend-screen dark:block"
+              className="hidden h-full w-full opacity-65 mix-blend-screen dark:block"
               width={1180}
               height={440}
               colorBack="#050000"
               colorFront="#ff6a00"
               shape="swirl"
               type="8x8"
-              pxSize={6}
-              speed={0.35}
+              pxSize={7}
+              speed={0.25}
               style={{ width: "100%", height: "100%" }}
             />
           </div>
-          <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,transparent_0%,hsl(var(--background)/0.28)_40%,hsl(var(--background))_76%)]" />
-          <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-background via-background/30 to-background" />
+          <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,transparent_0%,hsl(var(--background)/0.18)_40%,hsl(var(--background))_78%)]" />
+          <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-background via-background/20 to-background" />
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-0 top-1/2 z-0 h-px w-full bg-gradient-to-r from-transparent via-primary/70 to-transparent shadow-[0_0_28px_hsl(var(--primary)/0.55)]"
+            initial={{ y: -190, opacity: 0 }}
+            animate={{ y: [ -190, 190 ], opacity: [0, 0.9, 0] }}
+            transition={{ duration: 5.5, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+          />
           
           <div className="relative z-10 mx-auto w-full max-w-4xl space-y-8 px-0">
             <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/40 leading-[0.9]">
@@ -118,6 +127,12 @@ const Index = () => {
             Everything is curated and free to explore.
           </p>
           
+          <div className="flex flex-wrap items-center justify-center gap-3 text-[10px] font-mono font-bold uppercase tracking-[0.28em] text-muted-foreground/70">
+            <span className="rounded-full border border-primary/15 bg-background/40 px-3 py-1 backdrop-blur-sm">Vault online</span>
+            <span className="rounded-full border border-primary/15 bg-background/40 px-3 py-1 backdrop-blur-sm">{indexedCount} indexed</span>
+            <span className="rounded-full border border-primary/15 bg-background/40 px-3 py-1 backdrop-blur-sm">Private signals hidden</span>
+          </div>
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <div className="relative w-full max-w-md group">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
