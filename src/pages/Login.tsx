@@ -17,7 +17,7 @@ const Login = () => {
     e.preventDefault();
     
     if (!username.trim() || !password.trim()) {
-      toast.error('Please enter username and password');
+      toast.error('Please enter email and password');
       return;
     }
 
@@ -85,14 +85,14 @@ const Login = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground ml-1">Username</label>
+              <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground ml-1">Email</label>
               <div className="relative group">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 <Input
-                  type="text"
+                  type="email"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter username"
+                  placeholder="admin@example.com"
                   className="pl-11 h-12 bg-white/5 border-white/10 focus:border-primary/50 focus:bg-white/10 transition-all rounded-xl"
                 />
               </div>

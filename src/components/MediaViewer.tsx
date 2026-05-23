@@ -2,6 +2,7 @@ import { X, Download, FileText, Music, Video, StickyNote, Calendar, Database } f
 import { Button } from './ui/button';
 import { MediaItem, incrementDownloadCount, downloadMedia } from '@/hooks/useMedia';
 import { motion, AnimatePresence } from 'framer-motion';
+import DOMPurify from 'dompurify';
 
 interface MediaViewerProps {
   item: MediaItem;
@@ -80,7 +81,7 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
         return (
           <div className="w-full max-w-3xl mx-auto bg-card border border-white/10 p-5 md:p-10 rounded-2xl md:rounded-3xl shadow-2xl max-h-[75vh] md:max-h-[80vh] overflow-y-auto">
             <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-headings:font-display prose-headings:font-bold prose-p:font-light prose-p:leading-relaxed">
-              <div dangerouslySetInnerHTML={{ __html: item.content || '' }} />
+              <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.content || '') }} />
             </div>
           </div>
         );

@@ -1,39 +1,31 @@
 import { supabase } from "@/integrations/supabase/client";
 
 export interface AdminSession {
-  username: string;
+  email: string;
   isAdmin: boolean;
 }
 
-const ADMIN_SESSION_KEY = 'elsondev_admin_session';
-
-export const loginAdmin = async (username: string, password: string): Promise<{ success: boolean; error?: string }> => {
+export const loginAdmin = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+
+    if (error || !data.user) {
+      return { success: false, error: 'Invalid email or password.' };
+    }
+
+    const { data: admin, error: adminError } = await supabase
       .from('admins')
-      .select('username, password_hash')
-      .eq('username', username)
+      .select('user_id, email')
+      .eq('user_id', data.user.id)
       .maybeSingle();
 
-    if (error) {
-      console.error('Login error:', error);
-      return { success: false, error: 'Login failed. Please try again.' };
+    if (adminError || !admin) {
+      await supabase.auth.signOut();
+      return { success: false, error: 'This account is not an admin.' };
     }
-
-    if (!data) {
-      return { success: false, error: 'Invalid username or password.' };
-    }
-
-    if (data.password_hash !== password) {
-      return { success: false, error: 'Invalid username or password.' };
-    }
-
-    // Store session
-    const session: AdminSession = {
-      username: data.username,
-      isAdmin: true
-    };
-    localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(session));
 
     return { success: true };
   } catch (err) {
@@ -42,21 +34,35 @@ export const loginAdmin = async (username: string, password: string): Promise<{ 
   }
 };
 
-export const logoutAdmin = (): void => {
-  localStorage.removeItem(ADMIN_SESSION_KEY);
+export const logoutAdmin = async (): Promise<void> => {
+  await supabase.auth.signOut();
 };
 
-export const getAdminSession = (): AdminSession | null => {
-  try {
-    const sessionStr = localStorage.getItem(ADMIN_SESSION_KEY);
-    if (!sessionStr) return null;
-    return JSON.parse(sessionStr) as AdminSession;
-  } catch {
+export const getAdminSession = async (): Promise<AdminSession | null> => {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+
+  if (sessionError || !sessionData.session?.user) {
     return null;
   }
+
+  const user = sessionData.session.user;
+  const { data: admin, error: adminError } = await supabase
+    .from('admins')
+    .select('email')
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  if (adminError || !admin) {
+    return null;
+  }
+
+  return {
+    email: admin.email || user.email || '',
+    isAdmin: true,
+  };
 };
 
-export const isAdminLoggedIn = (): boolean => {
-  const session = getAdminSession();
+export const isAdminLoggedIn = async (): Promise<boolean> => {
+  const session = await getAdminSession();
   return session?.isAdmin === true;
 };

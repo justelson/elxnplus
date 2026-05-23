@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export type MediaType = 'audio' | 'video' | 'document' | 'note';
@@ -25,9 +25,10 @@ export const useMedia = (type?: MediaType) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchMedia = async () => {
+  const fetchMedia = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       let query = supabase.from('media').select('*').order('created_at', { ascending: false });
       
       if (type) {
@@ -44,11 +45,11 @@ export const useMedia = (type?: MediaType) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [type]);
 
   useEffect(() => {
     fetchMedia();
-  }, [type]);
+  }, [fetchMedia]);
 
   return { media, loading, error, refetch: fetchMedia };
 };
@@ -107,10 +108,8 @@ export const deleteMedia = async (id: string): Promise<{ success: boolean; error
 
 export const incrementViewCount = async (id: string): Promise<void> => {
   try {
-    const { data } = await supabase.from('media').select('view_count').eq('id', id).single();
-    if (data) {
-      await supabase.from('media').update({ view_count: (data.view_count || 0) + 1 }).eq('id', id);
-    }
+    const { error } = await supabase.rpc('increment_media_view', { media_id: id });
+    if (error) throw error;
   } catch (err) {
     console.error('Error incrementing view count:', err);
   }
@@ -118,10 +117,8 @@ export const incrementViewCount = async (id: string): Promise<void> => {
 
 export const incrementDownloadCount = async (id: string): Promise<void> => {
   try {
-    const { data } = await supabase.from('media').select('download_count').eq('id', id).single();
-    if (data) {
-      await supabase.from('media').update({ download_count: (data.download_count || 0) + 1 }).eq('id', id);
-    }
+    const { error } = await supabase.rpc('increment_media_download', { media_id: id });
+    if (error) throw error;
   } catch (err) {
     console.error('Error incrementing download count:', err);
   }

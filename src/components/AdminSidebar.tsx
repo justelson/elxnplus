@@ -22,8 +22,8 @@ const AdminSidebar = ({ onClose, className }: AdminSidebarProps) => {
     { icon: StickyNote, label: 'Personal Notes', path: '/admin/notes' },
   ];
 
-  const handleLogout = () => {
-    logoutAdmin();
+  const handleLogout = async () => {
+    await logoutAdmin();
     navigate('/login');
   };
 

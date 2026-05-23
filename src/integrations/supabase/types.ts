@@ -17,21 +17,21 @@ export type Database = {
       admins: {
         Row: {
           created_at: string | null
+          email: string
           id: string
-          password_hash: string
-          username: string
+          user_id: string
         }
         Insert: {
           created_at?: string | null
+          email: string
           id?: string
-          password_hash: string
-          username: string
+          user_id: string
         }
         Update: {
           created_at?: string | null
+          email?: string
           id?: string
-          password_hash?: string
-          username?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -91,7 +91,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_media_download: {
+        Args: { media_id: string }
+        Returns: undefined
+      }
+      increment_media_view: {
+        Args: { media_id: string }
+        Returns: undefined
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       media_type: "audio" | "video" | "document" | "note"
