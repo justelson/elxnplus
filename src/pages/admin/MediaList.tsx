@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Music, Video, FileText, StickyNote, Eye, Download, Trash2, Plus, Calendar, MoreVertical } from 'lucide-react';
+import { Music, Video, FileText, StickyNote, Eye, Download, Trash2, Plus, Calendar, MoreVertical, Globe2, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useMedia, MediaType, deleteMedia, MediaItem } from '@/hooks/useMedia';
+import { useMedia, MediaType, deleteMedia, MediaItem, setMediaPrivate, VisibilityFilter } from '@/hooks/useMedia';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -20,8 +20,10 @@ interface MediaListProps {
 
 const MediaList = ({ type, title }: MediaListProps) => {
   const navigate = useNavigate();
-  const { media, loading, refetch } = useMedia(type);
+  const [visibility, setVisibility] = useState<VisibilityFilter>('all');
+  const { media, loading, refetch } = useMedia(type, visibility);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [updatingPrivacy, setUpdatingPrivacy] = useState<string | null>(null);
 
   const handleDelete = async (item: MediaItem) => {
     if (!confirm(`Are you sure you want to delete "${item.title}"?`)) return;
@@ -35,6 +37,19 @@ const MediaList = ({ type, title }: MediaListProps) => {
       refetch();
     } else {
       toast.error(result.error || 'Failed to delete media');
+    }
+  };
+
+  const handlePrivacyToggle = async (item: MediaItem) => {
+    setUpdatingPrivacy(item.id);
+    const result = await setMediaPrivate(item.id, !item.is_private);
+    setUpdatingPrivacy(null);
+
+    if (result.success) {
+      toast.success(item.is_private ? 'Media is now public' : 'Media is now private');
+      refetch();
+    } else {
+      toast.error(result.error || 'Failed to update privacy');
     }
   };
 
@@ -66,6 +81,21 @@ const MediaList = ({ type, title }: MediaListProps) => {
         <Button onClick={() => navigate(`/admin/upload/${type}`)} className="rounded-full shadow-lg shadow-primary/20 h-12 px-8 w-full sm:w-auto font-bold text-sm uppercase tracking-widest">
           <Plus className="mr-2 h-4 w-4" /> New Archive
         </Button>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        {(['all', 'public', 'private'] as VisibilityFilter[]).map((value) => (
+          <Button
+            key={value}
+            variant={visibility === value ? 'default' : 'outline'}
+            onClick={() => setVisibility(value)}
+            className="rounded-full h-9 px-4 text-xs font-bold uppercase tracking-widest"
+          >
+            {value === 'private' && <Lock className="mr-2 h-3.5 w-3.5" />}
+            {value === 'public' && <Globe2 className="mr-2 h-3.5 w-3.5" />}
+            {value}
+          </Button>
+        ))}
       </div>
 
       {loading ? (
@@ -141,14 +171,20 @@ const MediaList = ({ type, title }: MediaListProps) => {
                         </div>
                       )}
                     </div>
-                    <span className={cn(
-                      "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border shadow-sm",
-                      item.is_published 
-                        ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" 
-                        : "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
-                    )}>
-                      {item.is_published ? 'LIVE' : 'DRAFT'}
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handlePrivacyToggle(item)}
+                      disabled={updatingPrivacy === item.id}
+                      className={cn(
+                        "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border shadow-sm flex items-center gap-1.5",
+                        item.is_private
+                          ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                          : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                      )}
+                    >
+                      {item.is_private ? <Lock className="h-3 w-3" /> : <Globe2 className="h-3 w-3" />}
+                      {item.is_private ? 'PRIVATE' : 'PUBLIC'}
+                    </button>
                   </div>
                 </motion.div>
               ))}
@@ -211,14 +247,20 @@ const MediaList = ({ type, title }: MediaListProps) => {
                            </div>
                         </td>
                         <td className="p-5 text-center">
-                          <span className={cn(
-                            "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border shadow-sm",
-                            item.is_published 
-                              ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" 
-                              : "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
-                          )}>
-                            {item.is_published ? 'LIVE' : 'DRAFT'}
-                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handlePrivacyToggle(item)}
+                            disabled={updatingPrivacy === item.id}
+                            className={cn(
+                              "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border shadow-sm inline-flex items-center gap-1.5",
+                              item.is_private
+                                ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                                : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                            )}
+                          >
+                            {item.is_private ? <Lock className="h-3 w-3" /> : <Globe2 className="h-3 w-3" />}
+                            {item.is_private ? 'PRIVATE' : 'PUBLIC'}
+                          </button>
                         </td>
                         <td className="p-5 text-right">
                           <Button 

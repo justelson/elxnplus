@@ -7,7 +7,7 @@ import { useState } from 'react';
 import MediaViewer from '@/components/MediaViewer';
 
 const Dashboard = () => {
-  const { media, loading } = useMedia();
+  const { media, loading } = useMedia(undefined, 'all');
   const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
 
   const handleOpenItem = async (item: MediaItem) => {

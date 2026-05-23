@@ -17,10 +17,18 @@ export default defineSchema({
     download_count: v.number(),
     view_count: v.number(),
     is_published: v.boolean(),
+    is_private: v.optional(v.boolean()),
     created_at: v.string(),
     updated_at: v.string(),
   })
     .index("by_type", ["type"])
     .index("by_published", ["is_published"])
     .index("by_legacy_id", ["legacyId"]),
+  adminSessions: defineTable({
+    tokenHash: v.string(),
+    email: v.string(),
+    createdAt: v.number(),
+    expiresAt: v.number(),
+    lastSeenAt: v.number(),
+  }).index("by_token_hash", ["tokenHash"]),
 });

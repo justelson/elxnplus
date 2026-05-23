@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { convex } from '@/integrations/convex/client';
 import { api } from '../../convex/_generated/api';
+import { getAdminToken } from '@/lib/auth';
 
 export type MediaType = 'audio' | 'video' | 'document' | 'note';
+export type VisibilityFilter = 'public' | 'private' | 'all';
 
 export interface MediaItem {
   id: string;
@@ -17,11 +19,12 @@ export interface MediaItem {
   download_count: number;
   view_count: number;
   is_published: boolean;
+  is_private: boolean;
   created_at: string;
   updated_at: string;
 }
 
-export const useMedia = (type?: MediaType) => {
+export const useMedia = (type?: MediaType, visibility: VisibilityFilter = 'public') => {
   const [media, setMedia] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +33,12 @@ export const useMedia = (type?: MediaType) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await convex.query(api.media.list, type ? { type } : {});
+      const sessionToken = getAdminToken() || undefined;
+      const data = await convex.query(api.media.list, {
+        ...(type ? { type } : {}),
+        visibility,
+        ...(sessionToken ? { sessionToken } : {}),
+      });
       setMedia(data as MediaItem[] || []);
     } catch (err) {
       console.error('Error fetching media:', err);
@@ -38,7 +46,7 @@ export const useMedia = (type?: MediaType) => {
     } finally {
       setLoading(false);
     }
-  }, [type]);
+  }, [type, visibility]);
 
   useEffect(() => {
     fetchMedia();
@@ -47,35 +55,49 @@ export const useMedia = (type?: MediaType) => {
   return { media, loading, error, refetch: fetchMedia };
 };
 
+export const setMediaPrivate = async (id: string, isPrivate: boolean): Promise<{ success: boolean; error?: string }> => {
+  const sessionToken = getAdminToken();
+  if (!sessionToken) return { success: false, error: 'Not logged in' };
+
+  try {
+    await convex.mutation(api.media.setPrivate, { id: id as never, isPrivate, sessionToken });
+    return { success: true };
+  } catch (err) {
+    console.error('Set private error:', err);
+    return { success: false, error: 'Failed to update privacy' };
+  }
+};
+
 export const uploadFile = async (_file?: File, _folder?: string): Promise<string | null> => {
-  console.warn('Admin uploads are disabled until Convex admin auth is wired.');
+  console.warn('Admin uploads are disabled until Convex admin upload flow is wired.');
   return null;
 };
 
 export const createMedia = async (_mediaData?: unknown): Promise<{ success: boolean; error?: string }> => {
   return {
     success: false,
-    error: 'Admin uploads are disabled until Convex admin auth is wired.',
+    error: 'Admin uploads are disabled until Convex admin upload flow is wired.',
   };
 };
 
 export const updateMedia = async (_id?: string, _mediaData?: unknown): Promise<{ success: boolean; error?: string }> => {
   return {
     success: false,
-    error: 'Admin edits are disabled until Convex admin auth is wired.',
+    error: 'Admin edits are disabled until Convex admin edit flow is wired.',
   };
 };
 
 export const deleteMedia = async (_id?: string): Promise<{ success: boolean; error?: string }> => {
   return {
     success: false,
-    error: 'Admin deletes are disabled until Convex admin auth is wired.',
+    error: 'Admin deletes are disabled until Convex admin delete flow is wired.',
   };
 };
 
 export const incrementViewCount = async (id: string): Promise<void> => {
   try {
-    await convex.mutation(api.media.incrementViewCount, { id: id as never });
+    const sessionToken = getAdminToken() || undefined;
+    await convex.mutation(api.media.incrementViewCount, { id: id as never, ...(sessionToken ? { sessionToken } : {}) });
   } catch (err) {
     console.error('Error incrementing view count:', err);
   }
@@ -83,7 +105,8 @@ export const incrementViewCount = async (id: string): Promise<void> => {
 
 export const incrementDownloadCount = async (id: string): Promise<void> => {
   try {
-    await convex.mutation(api.media.incrementDownloadCount, { id: id as never });
+    const sessionToken = getAdminToken() || undefined;
+    await convex.mutation(api.media.incrementDownloadCount, { id: id as never, ...(sessionToken ? { sessionToken } : {}) });
   } catch (err) {
     console.error('Error incrementing download count:', err);
   }
