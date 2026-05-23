@@ -38,7 +38,7 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground font-sans flex flex-col">
+    <div className="min-h-screen overflow-x-hidden bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground font-sans flex flex-col">
       <Navbar />
 
       <main className="flex-1 container mx-auto px-4 pt-32 pb-20 md:px-6">
@@ -47,12 +47,24 @@ const Index = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative left-1/2 mb-20 w-screen -translate-x-1/2 overflow-hidden text-center"
+          className="relative mb-20 w-full overflow-hidden text-center"
         >
           <DitheringShader
-            className="pointer-events-none absolute inset-0 z-0 h-full w-full opacity-50 mix-blend-screen"
-            width={1600}
-            height={520}
+            className="pointer-events-none absolute inset-0 z-0 h-full w-full opacity-35 mix-blend-multiply dark:hidden"
+            width={1200}
+            height={460}
+            colorBack="#fff7ed"
+            colorFront="#fb923c"
+            shape="swirl"
+            type="8x8"
+            pxSize={5}
+            speed={0.4}
+            style={{ width: "100%", height: "100%" }}
+          />
+          <DitheringShader
+            className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full opacity-50 mix-blend-screen dark:block"
+            width={1200}
+            height={460}
             colorBack="#050000"
             colorFront="#ff6a00"
             shape="swirl"
@@ -61,10 +73,10 @@ const Index = () => {
             speed={0.4}
             style={{ width: "100%", height: "100%" }}
           />
-          <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-background/15 via-background/35 to-background" />
+          <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-background/10 via-background/35 to-background dark:from-background/15" />
           
-          <div className="relative z-10 mx-auto max-w-4xl space-y-8 px-4 md:px-6">
-          <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/40 leading-[0.9]">
+          <div className="relative z-10 mx-auto max-w-4xl space-y-8 px-0">
+            <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/40 leading-[0.9]">
             The Artifacts <br /> of{" "}
             <span className="text-primary inline-flex items-baseline relative gap-[0.02em]">
               <span>E</span>
@@ -96,7 +108,7 @@ const Index = () => {
               </motion.span>
               <span>n</span>
             </span>
-          </h1>
+            </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
             Welcome to my personal space. This is where I share my files, media, and digital experiments. 
