@@ -143,13 +143,18 @@ const Index = () => {
             <p className="text-muted-foreground font-mono text-sm animate-pulse">Initializing vault access...</p>
           </div>
         ) : error ? (
-          <div className="text-center text-destructive py-20 border border-destructive/20 rounded-3xl bg-destructive/5">
-            <p className="font-bold">Access Denied</p>
-            <p className="text-sm opacity-80 mt-1">Failed to retrieve artifacts from the database.</p>
+          <div className="text-center text-muted-foreground py-20 border border-white/5 rounded-3xl bg-card/30">
+            <p className="font-display text-xl font-bold text-foreground">The vault did not load cleanly.</p>
+            <p className="text-sm opacity-80 mt-2 max-w-md mx-auto">
+              This usually means the connection was blocked or the archive is temporarily unavailable. Refresh the page and try again.
+            </p>
           </div>
         ) : filteredMedia.length === 0 ? (
-          <div className="text-center text-muted-foreground py-32 border border-dashed border-white/5 rounded-3xl">
-            <p className="text-xl font-light italic">This section of the vault is currently empty.</p>
+          <div className="text-center text-muted-foreground py-32 border border-dashed border-white/5 rounded-3xl bg-card/20">
+            <p className="text-xl font-display font-bold text-foreground">Nothing available here yet.</p>
+            <p className="text-sm opacity-80 mt-2 max-w-md mx-auto">
+              There are no public files matching this view. Private files only appear after logging in through the admin area.
+            </p>
             <Button variant="link" onClick={() => {setSearchQuery(""); setActiveFilter("all");}} className="mt-2 text-primary">
               Clear all filters
             </Button>
