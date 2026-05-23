@@ -29,7 +29,6 @@ const Index = () => {
     (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const indexedCount = media.length;
 
   const filters: { label: string; value: MediaType | "all" }[] = [
     { label: "Everything", value: "all" },
@@ -127,11 +126,6 @@ const Index = () => {
             Everything is curated and free to explore.
           </p>
           
-          <div className="flex flex-wrap items-center justify-center gap-3 text-[10px] font-mono font-bold uppercase tracking-[0.28em] text-muted-foreground/70">
-            <span className="rounded-full border border-primary/15 bg-background/40 px-3 py-1 backdrop-blur-sm">Vault online</span>
-            <span className="rounded-full border border-primary/15 bg-background/40 px-3 py-1 backdrop-blur-sm">{indexedCount} indexed</span>
-            <span className="rounded-full border border-primary/15 bg-background/40 px-3 py-1 backdrop-blur-sm">Private signals hidden</span>
-          </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <div className="relative w-full max-w-md group">
