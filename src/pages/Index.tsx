@@ -47,22 +47,23 @@ const Index = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative max-w-5xl mx-auto text-center mb-20 space-y-8 overflow-hidden rounded-[2.5rem] border border-primary/10 bg-background/30 px-4 py-16 shadow-2xl shadow-orange-950/20 md:px-10 md:py-24"
+          className="relative left-1/2 mb-20 w-screen -translate-x-1/2 overflow-hidden text-center"
         >
           <DitheringShader
-            className="pointer-events-none absolute inset-0 -z-10 h-full w-full opacity-45 mix-blend-screen"
-            width={1200}
-            height={700}
+            className="pointer-events-none absolute inset-0 z-0 h-full w-full opacity-50 mix-blend-screen"
+            width={1600}
+            height={520}
             colorBack="#050000"
             colorFront="#ff6a00"
-            shape="warp"
+            shape="swirl"
             type="8x8"
             pxSize={5}
-            speed={0.45}
+            speed={0.4}
             style={{ width: "100%", height: "100%" }}
           />
-          <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-background/20 via-background/35 to-background" />
+          <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-background/15 via-background/35 to-background" />
           
+          <div className="relative z-10 mx-auto max-w-4xl space-y-8 px-4 md:px-6">
           <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/40 leading-[0.9]">
             The Artifacts <br /> of{" "}
             <span className="text-primary inline-flex items-baseline relative gap-[0.02em]">
@@ -112,6 +113,7 @@ const Index = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
+          </div>
           </div>
         </motion.div>
 
