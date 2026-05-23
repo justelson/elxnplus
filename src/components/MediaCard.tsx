@@ -79,7 +79,7 @@ const MediaCard = ({ item }: MediaCardProps) => {
         whileHover={{ y: -5, scale: 1.02 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={cn(
-          "group relative overflow-hidden rounded-2xl border border-white/5 bg-card/40 backdrop-blur-md shadow-xl transition-all duration-300 h-[280px] flex flex-col cursor-pointer",
+          "group relative overflow-hidden rounded-lg border border-white/5 bg-card/40 backdrop-blur-md shadow-sm transition-all duration-300 h-[280px] flex flex-col cursor-pointer",
           "bg-gradient-to-br", theme.gradient, theme.border, theme.glow
         )}
         onClick={handleView}
@@ -87,7 +87,7 @@ const MediaCard = ({ item }: MediaCardProps) => {
         <div className="p-6 flex flex-col h-full relative z-10">
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
-            <div className="p-3 rounded-xl bg-white/5 border border-white/10 shadow-inner group-hover:bg-white/10 transition-colors">
+            <div className="p-3 rounded-md bg-white/5 border border-white/10 shadow-inner group-hover:bg-white/10 transition-colors">
               {theme.icon}
             </div>
             <div className="flex items-center gap-2">

@@ -28,7 +28,7 @@ const AdminSidebar = ({ onClose, className }: AdminSidebarProps) => {
   };
 
   return (
-    <aside className={cn("h-screen bg-background/95 backdrop-blur-xl border-r border-border flex flex-col z-50 transition-all duration-300", className)}>
+    <aside className={cn("h-screen bg-background/95 backdrop-blur-md border-r border-border flex flex-col z-50 transition-all duration-300", className)}>
       <div className="p-6 border-b border-border/40 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-display font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500">

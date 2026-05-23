@@ -35,7 +35,7 @@ const Navbar = () => {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
         scrolled
-          ? "bg-background/80 backdrop-blur-xl border-border/40 shadow-xl py-3"
+          ? "bg-background/80 backdrop-blur-md border-border/40 shadow-sm py-3"
           : "bg-transparent py-6 border-transparent"
       )}
     >
@@ -82,14 +82,14 @@ const Navbar = () => {
             </Button>
 
             {isAdmin ? (
-              <Button asChild variant="default" className="rounded-xl px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
+              <Button asChild variant="default" className="rounded-md px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
                 <Link to="/admin">
                   <LayoutDashboard className="mr-2 h-4 w-4" />
                   Admin Pan
                 </Link>
               </Button>
             ) : (
-              <Button asChild variant="outline" className="rounded-xl px-6 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all">
+              <Button asChild variant="outline" className="rounded-md px-6 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all">
                 <Link to="/login">
                   <LogIn className="mr-2 h-4 w-4" />
                   Access
@@ -141,11 +141,11 @@ const Navbar = () => {
                 </Button>
               </div>
               {isAdmin ? (
-                <Button asChild className="w-full h-12 rounded-xl">
+                <Button asChild className="w-full h-12 rounded-md">
                   <Link to="/admin" onClick={() => setIsOpen(false)}>Admin Panel</Link>
                 </Button>
               ) : (
-                <Button asChild variant="outline" className="w-full h-12 rounded-xl">
+                <Button asChild variant="outline" className="w-full h-12 rounded-md">
                   <Link to="/login" onClick={() => setIsOpen(false)}>Login</Link>
                 </Button>
               )}

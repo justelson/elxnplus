@@ -72,9 +72,9 @@ const Login = () => {
           Back to Home
         </Button>
 
-        <div className="glass-card p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl backdrop-blur-xl bg-black/40">
+        <div className="glass-card p-8 md:p-12 rounded-md border border-white/10 shadow-md backdrop-blur-md bg-black/40">
           <div className="text-center mb-10">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-lg shadow-primary/25">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-lg shadow-primary/25">
               <Hexagon className="h-10 w-10 text-white fill-white/20" />
             </div>
             <h1 className="text-3xl font-display font-bold tracking-tight">Admin Access</h1>
@@ -93,7 +93,7 @@ const Login = () => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="admin@example.com"
-                  className="pl-11 h-12 bg-white/5 border-white/10 focus:border-primary/50 focus:bg-white/10 transition-all rounded-xl"
+                  className="pl-11 h-12 bg-white/5 border-white/10 focus:border-primary/50 focus:bg-white/10 transition-all rounded-md"
                 />
               </div>
             </div>
@@ -107,14 +107,14 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password"
-                  className="pl-11 h-12 bg-white/5 border-white/10 focus:border-primary/50 focus:bg-white/10 transition-all rounded-xl"
+                  className="pl-11 h-12 bg-white/5 border-white/10 focus:border-primary/50 focus:bg-white/10 transition-all rounded-md"
                 />
               </div>
             </div>
 
             <Button 
               type="submit" 
-              className="w-full h-12 text-base font-medium rounded-xl bg-gradient-to-r from-primary to-purple-600 hover:opacity-90 transition-opacity shadow-lg shadow-primary/20"
+              className="w-full h-12 text-base font-medium rounded-md bg-gradient-to-r from-primary to-purple-600 hover:opacity-90 transition-opacity shadow-lg shadow-primary/20"
               disabled={loading}
             >
               {loading ? (

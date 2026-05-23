@@ -34,7 +34,7 @@ const Upload = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="rounded-2xl md:rounded-3xl border border-border bg-card/30 backdrop-blur-md p-5 md:p-10 shadow-2xl"
+        className="border-t border-border/60 pt-6 md:pt-8"
       >
         <UploadForm 
           initialType={type as MediaType} 

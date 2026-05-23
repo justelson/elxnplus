@@ -33,7 +33,7 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
       case 'audio':
         return (
           <div className="w-full max-w-md mx-auto space-y-8 px-4">
-            <div className="aspect-square bg-gradient-to-br from-orange-500/20 to-amber-500/10 rounded-3xl flex items-center justify-center border border-white/10 shadow-2xl relative overflow-hidden group">
+            <div className="aspect-square bg-gradient-to-br from-orange-500/20 to-amber-500/10 rounded-md flex items-center justify-center border border-white/10 shadow-md relative overflow-hidden group">
               <div className="absolute inset-0 bg-noise opacity-20" />
               <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-primary/20 flex items-center justify-center animate-pulse-glow">
                 <Music className="h-10 w-10 md:h-12 md:w-12 text-primary" />
@@ -48,7 +48,7 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
 
       case 'video':
         return (
-          <div className="w-full max-w-5xl mx-auto rounded-xl md:rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-black">
+          <div className="w-full max-w-5xl mx-auto rounded-md md:rounded-md overflow-hidden shadow-md border border-white/10 bg-black">
             <video controls className="w-full aspect-video" autoPlay>
               <source src={item.file_url!} />
               Your browser does not support the video element.
@@ -58,7 +58,7 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
 
       case 'document':
         return (
-          <div className="w-full h-[70vh] md:h-[80vh] bg-white rounded-xl overflow-hidden shadow-2xl">
+          <div className="w-full h-[70vh] md:h-[80vh] bg-white rounded-md overflow-hidden shadow-md">
             {item.file_url!.endsWith('.pdf') ? (
               <iframe
                 src={item.file_url!}
@@ -69,7 +69,7 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
               <div className="h-full flex flex-col items-center justify-center text-gray-900 p-8">
                 <FileText className="h-16 w-16 mb-4 text-gray-400" />
                 <p className="text-lg font-medium mb-2">Preview unavailable</p>
-                <Button onClick={handleDownload} className="rounded-full">
+                <Button onClick={handleDownload} className="rounded-md">
                   Download to View
                 </Button>
               </div>
@@ -79,7 +79,7 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
 
       case 'note':
         return (
-          <div className="w-full max-w-3xl mx-auto bg-card border border-white/10 p-5 md:p-10 rounded-2xl md:rounded-3xl shadow-2xl max-h-[75vh] md:max-h-[80vh] overflow-y-auto">
+          <div className="w-full max-w-3xl mx-auto bg-card border border-white/10 p-5 md:p-10 rounded-lg md:rounded-md shadow-md max-h-[75vh] md:max-h-[80vh] overflow-y-auto">
             <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-headings:font-display prose-headings:font-bold prose-p:font-light prose-p:leading-relaxed">
               <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.content || '') }} />
             </div>
@@ -139,7 +139,7 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
             </div>
             
             {item.file_url && (
-              <Button onClick={handleDownload} className="rounded-full gap-2 shadow-lg shadow-primary/20 shrink-0">
+              <Button onClick={handleDownload} className="rounded-md gap-2 shadow-sm shrink-0">
                 <Download className="h-4 w-4" />
                 <span className="hidden sm:inline">Download</span>
               </Button>

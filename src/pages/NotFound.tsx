@@ -21,13 +21,13 @@ const NotFound = () => {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="text-center relative z-10 p-8 glass-card rounded-3xl border border-white/10"
+        className="text-center relative z-10 p-8 glass-card rounded-md border border-white/10"
       >
         <h1 className="mb-2 text-8xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-white/20">404</h1>
         <p className="mb-8 text-xl text-muted-foreground font-light">
           The artifact you are looking for has been lost in the void.
         </p>
-        <Button asChild size="lg" className="rounded-full px-8 shadow-lg shadow-primary/20">
+        <Button asChild size="lg" className="rounded-md px-8 shadow-sm">
           <Link to="/">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Return to Home

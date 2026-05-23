@@ -71,14 +71,14 @@ const MediaList = ({ type, title }: MediaListProps) => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight flex items-center gap-3">
-             <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 shadow-lg shadow-primary/5">
+             <div className="p-2.5 rounded-md bg-primary/10 border border-primary/20 shadow-lg shadow-primary/5">
               {getIcon("h-6 w-6")}
              </div>
             {title}
           </h1>
           <p className="text-muted-foreground mt-1.5 text-sm font-medium opacity-70 tracking-tight">System archive for all {type} assets.</p>
         </div>
-        <Button onClick={() => navigate(`/admin/upload/${type}`)} className="rounded-full shadow-lg shadow-primary/20 h-12 px-8 w-full sm:w-auto font-bold text-sm uppercase tracking-widest">
+        <Button onClick={() => navigate(`/admin/upload/${type}`)} className="rounded-md shadow-sm h-12 px-8 w-full sm:w-auto font-bold text-sm uppercase tracking-widest">
           <Plus className="mr-2 h-4 w-4" /> New Archive
         </Button>
       </div>
@@ -89,7 +89,7 @@ const MediaList = ({ type, title }: MediaListProps) => {
             key={value}
             variant={visibility === value ? 'default' : 'outline'}
             onClick={() => setVisibility(value)}
-            className="rounded-full h-9 px-4 text-xs font-bold uppercase tracking-widest"
+            className="rounded-md h-9 px-4 text-xs font-bold uppercase tracking-widest"
           >
             {value === 'private' && <Lock className="mr-2 h-3.5 w-3.5" />}
             {value === 'public' && <Globe2 className="mr-2 h-3.5 w-3.5" />}
@@ -100,18 +100,18 @@ const MediaList = ({ type, title }: MediaListProps) => {
 
       {loading ? (
         <div className="space-y-4">
-           {[1,2,3,4].map(i => <div key={i} className="h-24 rounded-2xl bg-muted/20 animate-pulse" />)}
+           {[1,2,3,4].map(i => <div key={i} className="h-24 rounded-lg bg-muted/20 animate-pulse" />)}
         </div>
       ) : media.length === 0 ? (
-        <div className="rounded-3xl border border-border bg-card/30 backdrop-blur-sm p-12 md:p-20 text-center shadow-2xl border-dashed">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-muted/30 flex items-center justify-center border border-white/5">
+        <div className="border-y border-dashed border-border/70 py-12 md:py-16 text-center">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-md bg-muted/30 flex items-center justify-center border border-white/5">
             {getIcon("h-10 w-10 opacity-40")}
           </div>
           <h3 className="text-xl md:text-2xl font-display font-black mb-3">No Artifacts Detected</h3>
           <p className="text-muted-foreground mb-8 max-w-sm mx-auto text-sm leading-relaxed">
             This sector of the vault is currently empty. Initialize a new upload to begin archiving your {type} collection.
           </p>
-          <Button variant="outline" onClick={() => navigate('/admin/upload')} className="rounded-full h-11 px-8 font-bold text-xs uppercase tracking-widest">
+          <Button variant="outline" onClick={() => navigate('/admin/upload')} className="rounded-md h-11 px-8 font-bold text-xs uppercase tracking-widest">
             Initialize Upload
           </Button>
         </div>
@@ -126,11 +126,11 @@ const MediaList = ({ type, title }: MediaListProps) => {
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="bg-card/50 backdrop-blur-md border border-border p-5 rounded-2xl flex flex-col gap-4 shadow-xl"
+                  className="bg-card/50 backdrop-blur-md border border-border p-5 rounded-lg flex flex-col gap-4 shadow-sm"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-background/60 border border-border flex items-center justify-center shrink-0 shadow-inner">
+                      <div className="w-12 h-12 rounded-md bg-background/60 border border-border flex items-center justify-center shrink-0 shadow-inner">
                         {getIcon("h-6 w-6")}
                       </div>
                       <div className="min-w-0">
@@ -147,9 +147,9 @@ const MediaList = ({ type, title }: MediaListProps) => {
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-44 rounded-2xl p-1 shadow-2xl bg-popover/90 backdrop-blur-xl border-white/10">
+                      <DropdownMenuContent align="end" className="w-44 rounded-lg p-1 shadow-md bg-popover/90 backdrop-blur-md border-white/10">
                         <DropdownMenuItem 
-                          className="text-destructive focus:text-destructive focus:bg-destructive/10 rounded-xl h-11 font-bold text-xs uppercase tracking-widest cursor-pointer"
+                          className="text-destructive focus:text-destructive focus:bg-destructive/10 rounded-md h-11 font-bold text-xs uppercase tracking-widest cursor-pointer"
                           onClick={() => handleDelete(item)}
                           disabled={deleting === item.id}
                         >
@@ -176,7 +176,7 @@ const MediaList = ({ type, title }: MediaListProps) => {
                       onClick={() => handlePrivacyToggle(item)}
                       disabled={updatingPrivacy === item.id}
                       className={cn(
-                        "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border shadow-sm flex items-center gap-1.5",
+                        "px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-widest border shadow-sm flex items-center gap-1.5",
                         item.is_private
                           ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
                           : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
@@ -192,7 +192,7 @@ const MediaList = ({ type, title }: MediaListProps) => {
           </div>
 
           {/* Desktop Table View */}
-          <div className="hidden md:block rounded-3xl border border-border bg-card/30 backdrop-blur-md overflow-hidden shadow-2xl">
+          <div className="hidden md:block border-y border-border/70 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-muted/30 border-b border-border/50 text-left">
@@ -217,7 +217,7 @@ const MediaList = ({ type, title }: MediaListProps) => {
                       >
                         <td className="p-5">
                           <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-background/50 border border-border/50 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 shadow-inner">
+                            <div className="w-12 h-12 rounded-lg bg-background/50 border border-border/50 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 shadow-inner">
                               {getIcon("h-6 w-6")}
                             </div>
                             <div className="min-w-0 max-w-md">
@@ -236,11 +236,11 @@ const MediaList = ({ type, title }: MediaListProps) => {
                         </td>
                         <td className="p-5">
                            <div className="flex items-center justify-center gap-4">
-                              <div className="flex items-center gap-2 text-[11px] font-mono font-bold text-muted-foreground bg-background/40 px-3 py-1.5 rounded-xl border border-white/5 shadow-inner">
+                              <div className="flex items-center gap-2 text-[11px] font-mono font-bold text-muted-foreground bg-background/40 px-3 py-1.5 rounded-md border border-white/5 shadow-inner">
                                 <Eye className="h-3.5 w-3.5" /> {item.view_count}
                               </div>
                               {type !== 'note' && (
-                                <div className="flex items-center gap-2 text-[11px] font-mono font-bold text-muted-foreground bg-background/40 px-3 py-1.5 rounded-xl border border-white/5 shadow-inner">
+                                <div className="flex items-center gap-2 text-[11px] font-mono font-bold text-muted-foreground bg-background/40 px-3 py-1.5 rounded-md border border-white/5 shadow-inner">
                                   <Download className="h-3.5 w-3.5" /> {item.download_count}
                                 </div>
                               )}
@@ -252,7 +252,7 @@ const MediaList = ({ type, title }: MediaListProps) => {
                             onClick={() => handlePrivacyToggle(item)}
                             disabled={updatingPrivacy === item.id}
                             className={cn(
-                              "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border shadow-sm inline-flex items-center gap-1.5",
+                              "px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest border shadow-sm inline-flex items-center gap-1.5",
                               item.is_private
                                 ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
                                 : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
@@ -268,7 +268,7 @@ const MediaList = ({ type, title }: MediaListProps) => {
                             size="icon"
                             onClick={() => handleDelete(item)}
                             disabled={deleting === item.id}
-                            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all rounded-2xl h-10 w-10 shadow-sm"
+                            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all rounded-lg h-10 w-10 shadow-sm"
                           >
                             {deleting === item.id ? (
                               <div className="w-4 h-4 border-2 border-destructive border-t-transparent rounded-full animate-spin" />
