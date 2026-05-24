@@ -1,9 +1,8 @@
-import { Music, Video, FileText, StickyNote, Download, Eye, Play, ArrowRight } from 'lucide-react';
+import { Music, Video, FileText, StickyNote, Download, Eye, ArrowRight } from 'lucide-react';
 import { Button } from './ui/button';
-import { MediaItem, incrementDownloadCount, incrementViewCount, downloadMedia } from '@/hooks/useMedia';
+import { MediaItem, incrementViewCount, downloadMedia } from '@/hooks/useMedia';
 import { useState } from 'react';
 import MediaViewer from './MediaViewer';
-import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface MediaCardProps {
@@ -75,9 +74,7 @@ const MediaCard = ({ item }: MediaCardProps) => {
 
   return (
     <>
-      <motion.div
-        whileHover={{ y: -5, scale: 1.02 }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      <div
         className={cn(
           "group relative overflow-hidden rounded-none border border-white/5 bg-card/40 backdrop-blur-md shadow-sm transition-all duration-300 h-[280px] flex flex-col cursor-pointer",
           "bg-gradient-to-br", theme.gradient, theme.border, theme.glow
@@ -135,19 +132,16 @@ const MediaCard = ({ item }: MediaCardProps) => {
             <div className="flex items-center gap-2">
               <span className="opacity-70">{formatFileSize(item.file_size)}</span>
               <div className="h-1 w-1 rounded-full bg-white/20"></div>
-              <motion.div 
-                whileHover={{ x: 3 }}
-                className="text-primary flex items-center gap-1 font-bold cursor-pointer"
-              >
+              <div className="text-primary flex items-center gap-1 font-bold cursor-pointer">
                 VIEW <ArrowRight className="h-3 w-3" />
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
         
         {/* Hover Glow Effect */}
         <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-      </motion.div>
+      </div>
 
       {showViewer && (
         <MediaViewer item={item} onClose={() => setShowViewer(false)} />

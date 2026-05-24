@@ -1,4 +1,4 @@
-import { LayoutDashboard, Music, Video, FileText, StickyNote, Upload, LogOut, Home, X } from 'lucide-react';
+import { LayoutDashboard, Music, Video, FileText, StickyNote, LogOut, Home, X, Library } from 'lucide-react';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
 import { logoutAdmin } from '@/lib/auth';
@@ -15,7 +15,8 @@ const AdminSidebar = ({ onClose, className }: AdminSidebarProps) => {
   const location = useLocation();
 
   const menuItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
+    { icon: LayoutDashboard, label: 'Home', path: '/admin' },
+    { icon: Library, label: 'Everything', path: '/admin/everything' },
     { icon: Music, label: 'Audio Logs', path: '/admin/audio' },
     { icon: Video, label: 'Video Feeds', path: '/admin/video' },
     { icon: FileText, label: 'Documents', path: '/admin/documents' },
@@ -34,7 +35,7 @@ const AdminSidebar = ({ onClose, className }: AdminSidebarProps) => {
           <h1 className="text-xl font-display font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500">
             ELXN.ADMIN
           </h1>
-          <p className="text-xs font-mono text-muted-foreground/80 tracking-widest mt-1">SYSTEM CONTROL</p>
+          <p className="text-xs font-mono text-muted-foreground/80 tracking-widest mt-1">ADMIN AREA</p>
         </div>
         {onClose && (
           <Button variant="ghost" size="icon" onClick={onClose} className="md:hidden">

@@ -42,13 +42,13 @@ const Index = () => {
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground font-sans flex flex-col">
       <Navbar />
 
-      <main className="flex-1 container mx-auto px-4 pt-32 pb-20 md:px-6">
+      <main className="flex-1 container mx-auto px-4 pt-28 pb-20 md:px-6">
         {/* Hero Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative mb-20 grid min-h-[560px] w-full place-items-center overflow-hidden text-center md:min-h-[620px]"
+          className="relative mb-10 grid min-h-[420px] w-full place-items-center overflow-hidden text-center md:min-h-[500px]"
         >
           <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[440px] w-[min(100%,1180px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden">
             <DitheringShader
@@ -86,7 +86,7 @@ const Index = () => {
             transition={{ duration: 5.5, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
           />
           
-          <div className="relative z-10 mx-auto w-full max-w-4xl space-y-8 px-0">
+          <div className="relative z-10 mx-auto w-full max-w-4xl space-y-6 px-0">
             <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/40 leading-[0.9]">
             The Artifacts <br /> of{" "}
             <span className="text-primary inline-flex items-baseline relative gap-[0.02em]">
@@ -127,7 +127,7 @@ const Index = () => {
           </p>
           
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <div className="relative w-full max-w-md group">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
               <Input 
@@ -142,7 +142,7 @@ const Index = () => {
         </motion.div>
 
         {/* Filters and Section Header */}
-        <div className="space-y-8 mb-12">
+        <div className="space-y-6 mb-10">
           <div className="flex items-center gap-4">
             <FolderOpen className="h-5 w-5 text-primary" />
             <h2 className="text-xl font-display font-bold uppercase tracking-widest">Library Collections</h2>

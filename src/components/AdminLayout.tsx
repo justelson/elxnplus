@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { isAdminLoggedIn } from '@/lib/auth';
 import AdminSidebar from '@/components/AdminSidebar';
 import { Loader2, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription, SheetHeader } from '@/components/ui/sheet';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -36,7 +35,7 @@ const AdminLayout = () => {
     return () => {
       isMounted = false;
     };
-  }, [navigate, location.pathname]);
+  }, [navigate]);
 
   if (isCheckingAuth) {
     return (
@@ -81,17 +80,7 @@ const AdminLayout = () => {
 
       <main className="flex-1 md:pl-64 transition-all duration-300">
         <div className="p-4 md:p-8 pt-20 md:pt-8 min-h-screen bg-muted/5 relative overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={location.pathname}
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 10, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              <Outlet />
-            </motion.div>
-          </AnimatePresence>
+          <Outlet />
         </div>
       </main>
     </div>

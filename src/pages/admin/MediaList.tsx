@@ -79,7 +79,7 @@ const MediaList = ({ type, title }: MediaListProps) => {
           <p className="text-muted-foreground mt-1.5 text-sm font-medium opacity-70 tracking-tight">System archive for all {type} assets.</p>
         </div>
         <Button onClick={() => navigate(`/admin/upload/${type}`)} className="rounded-none shadow-sm h-12 px-8 w-full sm:w-auto font-bold text-sm uppercase tracking-widest">
-          <Plus className="mr-2 h-4 w-4" /> New Archive
+          <Plus className="mr-2 h-4 w-4" /> Upload {title}
         </Button>
       </div>
 
@@ -112,7 +112,7 @@ const MediaList = ({ type, title }: MediaListProps) => {
             This sector of the vault is currently empty. Initialize a new upload to begin archiving your {type} collection.
           </p>
           <Button variant="outline" onClick={() => navigate('/admin/upload')} className="rounded-none h-11 px-8 font-bold text-xs uppercase tracking-widest">
-            Initialize Upload
+            Upload {title}
           </Button>
         </div>
       ) : (
@@ -217,7 +217,7 @@ const MediaList = ({ type, title }: MediaListProps) => {
                       >
                         <td className="p-5">
                           <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-none bg-background/50 border border-border/50 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 shadow-inner">
+                            <div className="w-12 h-12 rounded-none bg-background/50 border border-border/50 flex items-center justify-center shrink-0 shadow-inner">
                               {getIcon("h-6 w-6")}
                             </div>
                             <div className="min-w-0 max-w-md">

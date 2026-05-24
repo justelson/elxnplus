@@ -120,8 +120,8 @@ const UploadForm = ({ onSuccess, initialType }: UploadFormProps) => {
               className={cn(
                 "flex flex-col items-center justify-center p-6 rounded-none border transition-all duration-300",
                 mediaType === type 
-                  ? "bg-primary/10 border-primary text-primary shadow-lg shadow-primary/10 scale-105" 
-                  : "bg-card/50 border-border text-muted-foreground hover:bg-card hover:border-border/80 hover:scale-[1.02]"
+                  ? "bg-primary/10 border-primary text-primary shadow-lg shadow-primary/10" 
+                  : "bg-card/50 border-border text-muted-foreground hover:bg-card hover:border-border/80"
               )}
             >
               <Icon className="h-6 w-6 mb-3" />

@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Dashboard from "./pages/admin/Dashboard";
+import Everything from "./pages/admin/Everything";
 import Upload from "./pages/admin/Upload";
 import MediaList from "./pages/admin/MediaList";
 import NotFound from "./pages/NotFound";
@@ -29,6 +30,7 @@ const App = () => (
             {/* Admin Routes wrapped in Layout */}
             <Route element={<AdminLayout />}>
               <Route path="/admin" element={<Dashboard />} />
+              <Route path="/admin/everything" element={<Everything />} />
               <Route path="/admin/upload" element={<Upload />} />
               <Route path="/admin/upload/:type" element={<Upload />} />
               <Route path="/admin/audio" element={<MediaList type="audio" title="Audio Logs" />} />

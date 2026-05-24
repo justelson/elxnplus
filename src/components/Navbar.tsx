@@ -44,7 +44,7 @@ const Navbar = () => {
           to="/" 
           className="flex items-center gap-2 group"
         >
-          <div className="p-1.5 rounded-none bg-primary shadow-lg shadow-primary/25 transition-transform group-hover:rotate-12">
+          <div className="p-1.5 rounded-none bg-primary shadow-lg shadow-primary/25">
             <Zap className="h-5 w-5 text-white fill-white" />
           </div>
           <span className="text-2xl font-display font-black tracking-tighter text-foreground">
