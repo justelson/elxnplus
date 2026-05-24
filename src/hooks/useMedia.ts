@@ -24,14 +24,20 @@ export interface MediaItem {
   updated_at: string;
 }
 
+const mediaCache = new Map<string, MediaItem[]>();
+
 export const useMedia = (type?: MediaType, visibility: VisibilityFilter = 'public') => {
-  const [media, setMedia] = useState<MediaItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const cacheKey = `${type || 'all'}:${visibility}`;
+  const cachedMedia = mediaCache.get(cacheKey);
+  const [media, setMedia] = useState<MediaItem[]>(cachedMedia || []);
+  const [loading, setLoading] = useState(!cachedMedia);
   const [error, setError] = useState<string | null>(null);
 
   const fetchMedia = useCallback(async () => {
     try {
-      setLoading(true);
+      if (!mediaCache.has(cacheKey)) {
+        setLoading(true);
+      }
       setError(null);
       const sessionToken = getAdminToken() || undefined;
       const data = await convex.query(api.media.list, {
@@ -39,14 +45,16 @@ export const useMedia = (type?: MediaType, visibility: VisibilityFilter = 'publi
         visibility,
         ...(sessionToken ? { sessionToken } : {}),
       });
-      setMedia(data as MediaItem[] || []);
+      const nextMedia = data as MediaItem[] || [];
+      mediaCache.set(cacheKey, nextMedia);
+      setMedia(nextMedia);
     } catch (err) {
       console.error('Error fetching media:', err);
       setError('Failed to load media');
     } finally {
       setLoading(false);
     }
-  }, [type, visibility]);
+  }, [type, visibility, cacheKey]);
 
   useEffect(() => {
     fetchMedia();

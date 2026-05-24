@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 import { Upload, X, Music, Video, FileText, StickyNote } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
-import WysiwygEditor from './WysiwygEditor';
+const NotionBlockEditor = lazy(() => import('./NotionBlockEditor'));
 import { MediaType, uploadFile, createMedia } from '@/hooks/useMedia';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -212,13 +212,13 @@ const UploadForm = ({ onSuccess, initialType }: UploadFormProps) => {
         {mediaType === 'note' && (
           <div className="space-y-2">
             <label className="text-sm font-medium ml-1">Content</label>
-            <div className="rounded-none border border-white/10 bg-white/5 overflow-hidden">
-              <WysiwygEditor 
+            <Suspense fallback={<div className="min-h-[360px] rounded-none border border-white/10 bg-card/30 animate-pulse" />}>
+              <NotionBlockEditor 
                 content={content} 
                 onChange={setContent}
-                placeholder="Start writing..."
+                placeholder="Type / for blocks, headings, lists, and embeds..."
               />
-            </div>
+            </Suspense>
           </div>
         )}
 

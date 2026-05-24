@@ -1,8 +1,8 @@
 import { X, Download, FileText, Music, Video, StickyNote, Calendar, Database } from 'lucide-react';
 import { Button } from './ui/button';
-import { MediaItem, incrementDownloadCount, downloadMedia } from '@/hooks/useMedia';
-import { motion, AnimatePresence } from 'framer-motion';
+import { MediaItem, downloadMedia } from '@/hooks/useMedia';
 import DOMPurify from 'dompurify';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
 interface MediaViewerProps {
   item: MediaItem;
@@ -24,7 +24,7 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
       case 'document': return <FileText className="h-5 w-5 text-yellow-400" />;
       case 'note': return <StickyNote className="h-5 w-5 text-orange-500" />;
     }
-  }
+  };
 
   const renderContent = () => {
     if (!item.file_url && item.type !== 'note') return null;
@@ -33,9 +33,9 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
       case 'audio':
         return (
           <div className="w-full max-w-md mx-auto space-y-8 px-4">
-            <div className="aspect-square bg-gradient-to-br from-orange-500/20 to-amber-500/10 rounded-none flex items-center justify-center border border-white/10 shadow-md relative overflow-hidden group">
+            <div className="aspect-square bg-gradient-to-br from-orange-500/20 to-amber-500/10 rounded-none flex items-center justify-center border border-white/10 shadow-md relative overflow-hidden">
               <div className="absolute inset-0 bg-noise opacity-20" />
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-primary/20 flex items-center justify-center animate-pulse-glow">
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-primary/20 flex items-center justify-center">
                 <Music className="h-10 w-10 md:h-12 md:w-12 text-primary" />
               </div>
             </div>
@@ -48,7 +48,7 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
 
       case 'video':
         return (
-          <div className="w-full max-w-5xl mx-auto rounded-none md:rounded-none overflow-hidden shadow-md border border-white/10 bg-black">
+          <div className="w-full max-w-5xl mx-auto rounded-none overflow-hidden shadow-md border border-white/10 bg-black">
             <video controls className="w-full aspect-video" autoPlay>
               <source src={item.file_url!} />
               Your browser does not support the video element.
@@ -79,7 +79,7 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
 
       case 'note':
         return (
-          <div className="w-full max-w-3xl mx-auto bg-card border border-white/10 p-5 md:p-10 rounded-none md:rounded-none shadow-md max-h-[75vh] md:max-h-[80vh] overflow-y-auto">
+          <div className="w-full max-w-3xl mx-auto bg-card border border-white/10 p-5 md:p-10 rounded-none shadow-md max-h-[75vh] md:max-h-[80vh] overflow-y-auto">
             <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-headings:font-display prose-headings:font-bold prose-p:font-light prose-p:leading-relaxed">
               <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.content || '') }} />
             </div>
@@ -89,27 +89,15 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
   };
 
   return (
-    <AnimatePresence>
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-2xl p-4 md:p-8"
-        onClick={onClose}
-      >
-        <motion.div 
-          initial={{ scale: 0.95, y: 20, opacity: 0 }}
-          animate={{ scale: 1, y: 0, opacity: 1 }}
-          exit={{ scale: 0.95, y: 20, opacity: 0 }}
-          className="relative w-full h-full flex flex-col"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6 md:mb-8">
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-none w-screen h-screen translate-x-[-50%] translate-y-[-50%] border-0 bg-background/95 backdrop-blur-2xl p-4 md:p-8 shadow-none data-[state=open]:zoom-in-100 data-[state=closed]:zoom-out-100 data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[50%]">
+        <DialogTitle className="sr-only">View {item.title}</DialogTitle>
+        <div className="relative w-full h-full flex flex-col">
+          <div className="flex items-center justify-between mb-6 md:mb-8 pr-10">
             <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
-              <Button 
-                variant="outline" 
-                size="icon" 
+              <Button
+                variant="outline"
+                size="icon"
                 className="rounded-none h-9 w-9 md:h-10 md:w-10 border-white/10 hover:bg-white/10 shrink-0"
                 onClick={onClose}
               >
@@ -137,7 +125,7 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
                 </div>
               </div>
             </div>
-            
+
             {item.file_url && (
               <Button onClick={handleDownload} className="rounded-none gap-2 shadow-sm shrink-0">
                 <Download className="h-4 w-4" />
@@ -146,13 +134,12 @@ const MediaViewer = ({ item, onClose }: MediaViewerProps) => {
             )}
           </div>
 
-          {/* Content Area */}
           <div className="flex-1 flex items-center justify-center overflow-hidden">
             {renderContent()}
           </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -1,6 +1,5 @@
 import UploadForm from '@/components/UploadForm';
 import { useNavigate, useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MediaType } from '@/hooks/useMedia';
@@ -24,23 +23,18 @@ const Upload = () => {
         
         <div>
           <h1 className="text-2xl md:text-3xl font-display font-black tracking-tight uppercase">
-            {type ? `Initialize ${type} Archive` : 'Archive Artifact'}
+            {type ? `Upload ${type === 'note' ? 'Personal Note' : type}` : 'Upload Item'}
           </h1>
-          <p className="text-muted-foreground mt-1 text-sm">Upload new content to the digital vault.</p>
+          <p className="text-muted-foreground mt-1 text-sm">Add a stored item to the digital vault.</p>
         </div>
       </div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="border-t border-border/60 pt-6 md:pt-8"
-      >
+      <div className="border-t border-border/60 pt-6 md:pt-8">
         <UploadForm 
           initialType={type as MediaType} 
           onSuccess={() => navigate(type ? `/admin/${type === 'note' ? 'notes' : type === 'document' ? 'documents' : type}` : '/admin')} 
         />
-      </motion.div>
+      </div>
     </div>
   );
 };
